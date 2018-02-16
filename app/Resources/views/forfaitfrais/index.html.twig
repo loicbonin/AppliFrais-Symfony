@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Forfaitfrais list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Quantity</th>
+                <th>Datedufrais</th>
+                <th>Created</th>
+                <th>Derniereedition</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for forfaitFrai in forfaitFrais %}
+            <tr>
+                <td><a href="{{ path('forfaitfrais_show', { 'id': forfaitFrai.id }) }}">{{ forfaitFrai.id }}</a></td>
+                <td>{{ forfaitFrai.quantity }}</td>
+                <td>{% if forfaitFrai.dateDuFrais %}{{ forfaitFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if forfaitFrai.created %}{{ forfaitFrai.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if forfaitFrai.derniereEdition %}{{ forfaitFrai.derniereEdition|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('forfaitfrais_show', { 'id': forfaitFrai.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('forfaitfrais_edit', { 'id': forfaitFrai.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('forfaitfrais_new') }}">Create a new forfaitFrai</a>
+        </li>
+    </ul>
+{% endblock %}

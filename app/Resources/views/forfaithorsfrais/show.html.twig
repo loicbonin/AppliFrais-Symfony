@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Forfaithorsfrai</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ forfaitHorsFrai.id }}</td>
+            </tr>
+            <tr>
+                <th>Wording</th>
+                <td>{{ forfaitHorsFrai.wording }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ forfaitHorsFrai.price }}</td>
+            </tr>
+            <tr>
+                <th>Datedufrais</th>
+                <td>{% if forfaitHorsFrai.dateDuFrais %}{{ forfaitHorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if forfaitHorsFrai.created %}{{ forfaitHorsFrai.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Lastupdate</th>
+                <td>{% if forfaitHorsFrai.lastUpdate %}{{ forfaitHorsFrai.lastUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ forfaitHorsFrai.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('forfaithorsfrais_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('forfaithorsfrais_edit', { 'id': forfaitHorsFrai.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

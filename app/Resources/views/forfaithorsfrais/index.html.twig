@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Forfaithorsfrais list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Wording</th>
+                <th>Price</th>
+                <th>Datedufrais</th>
+                <th>Created</th>
+                <th>Lastupdate</th>
+                <th>Comment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for forfaitHorsFrai in forfaitHorsFrais %}
+            <tr>
+                <td><a href="{{ path('forfaithorsfrais_show', { 'id': forfaitHorsFrai.id }) }}">{{ forfaitHorsFrai.id }}</a></td>
+                <td>{{ forfaitHorsFrai.wording }}</td>
+                <td>{{ forfaitHorsFrai.price }}</td>
+                <td>{% if forfaitHorsFrai.dateDuFrais %}{{ forfaitHorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if forfaitHorsFrai.created %}{{ forfaitHorsFrai.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if forfaitHorsFrai.lastUpdate %}{{ forfaitHorsFrai.lastUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ forfaitHorsFrai.comment }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('forfaithorsfrais_show', { 'id': forfaitHorsFrai.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('forfaithorsfrais_edit', { 'id': forfaitHorsFrai.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('forfaithorsfrais_new') }}">Create a new forfaitHorsFrai</a>
+        </li>
+    </ul>
+{% endblock %}

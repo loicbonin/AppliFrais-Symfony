@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Fichefrai</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ficheFrai.id }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ ficheFrai.url }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ ficheFrai.title }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if ficheFrai.created %}{{ ficheFrai.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Derniereedition</th>
+                
+            </tr>
+            <tr>
+                <th>Month</th>
+                <td>{{ ficheFrai.monthyear }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ ficheFrai.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('fichefrais_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('fichefrais_edit', { 'id': ficheFrai.id }) }}">Ajouter frais hors forfait</a>
+        </li>
+        <li>
+            <a href="{{ path('fichefrais_addForfaitFrais', { 'id': ficheFrai.id }) }}">Ajouter frais forfait</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

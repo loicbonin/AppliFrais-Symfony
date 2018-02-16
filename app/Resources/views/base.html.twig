@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>{% block title %}GSB - AppliFrais{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+            <link rel="stylesheet" href="{{ asset('css/materialize.min.css') }}" type="text/css" media="all"/>
+            <link rel="stylesheet" href="{{ asset('css/main.css') }}" type="text/css" media="all"/>
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+    {% block nav %}
+        <nav class="blue darken-4">
+            <div class="nav-wrapper">
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a href="{{ path('index_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+                {% else %}
+                    <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+                {% endif %}
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {% if not is_granted("ROLE_ADMIN") %}
+                            <li><a class="btn-floating btn waves-effect waves-light transparent z-depth-0 modal-trigger" href="#addNoteModal"><i class="material-icons">add</i></a></li>
+                        {% endif %}
+                        <li><a onclick="$('.tap-target').tapTarget('open');" href="#">Aide</a></li>
+                        <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
+                    {% else %}
+                        <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        <div class="tap-target" data-activates="menu">
+            <div class="tap-target-content">
+                <h5>Besoin d'aide ?</h5>
+                <p>Cliquez sur le bouton plus pour ajouter une ou plusieurs notes de frais.</p>
+            </div>
+        </div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            {% if not is_granted("ROLE_ADMIN") %}
+                {% if lastfichefrais is defined %}
+                    <div id="addNoteModal" class="modal" style="width: 400px;">
+                        <div class="modal-content">
+                            <i class="material-icons right modal-close black-text">close</i>
+                            <h4>Ajouter une note</h4>
+                            <p>Quel type de note voulez vous ajouter ?</p>
+                            <center>
+                                <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('forfaitfrais_new', { 'ficheFraisId': lastfichefrais.0.id }) }}" style="width: 100%; margin-top: 20px;">note forfait</a>
+                                <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('forfaithorsfrais_new', { 'ficheFraisId': lastfichefrais.0.id }) }}" style="width: 100%; margin-top: 10px;">note hors forfait</a>
+                            </center>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endblock %}
+    <div class="container" style="margin-top: 30px;">
+        {% block body %}
+        {% endblock %}
+    </div>
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/materialize.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
+    {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block nav %}
+            <nav class="blue darken-4">
+                <div class="nav-wrapper">
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a href="{{ path('index_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+                    {% else %}
+                        <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+                    {% endif %}                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {#<li><a class="btn-floating btn waves-effect waves-light transparent z-depth-0 modal-trigger" href="#addNoteModal"><i class="material-icons">add</i></a></li>#}
+                        <li><a onclick="$('.tap-target').tapTarget('open');" href="#">Aide</a></li>
+                        <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                        <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
+                        {% else %}
+                        <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            <div class="tap-target" data-activates="menu">
+                <div class="tap-target-content">
+                    <h5>Besoin d'aide ?</h5>
+                    <p>Cliquez sur le bouton plus afin d'ajouter une ou plusieurs notes de frais.</p>
+                </div>
+            </div>
+            {#
+            <div id="addNoteModal" class="modal" style="width: 400px;">
+                <div class="modal-content">
+                    <i class="material-icons right modal-close black-text">close</i>
+                    <h4>Ajouter une note</h4>
+                    <p>Quel type de note voulez vous ajouter ?</p>
+                    <center>
+                        <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('fichefrais_new') }}" style="width: 100%; margin-top: 20px;">note forfait</a>
+                        <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('fichefrais_new') }}" style="width: 100%; margin-top: 10px;">note hors forfait</a>
+                    </center>
+                </div>
+            </div>#}
+        {% endblock %}
+{% block body %}
+    <h1>Forfaithorsfrai creation</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.wording, {'attr': {'class': 'validate'}}) }}
+    {{ form_row(form.price, {'attr': {'class': 'validate'}}) }}
+    {{ form_row(form.dateDuFrais, {'attr': {'class': 'timepicker'}}) }}
+    {{ form_row(form.comment, {'attr': {'class': 'validate'}}) }}
+    {{ form_row(form.pieceJointe, {'attr': {'class': 'validate'}}) }}
+
+
+    <input class="waves-effect waves-light btn red darken-2" type="submit" value="Ajouter" />
+
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a class="waves-effect waves-light btn red darken-2" href="{{ path('forfaithorsfrais_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Forfaitfrai</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ forfaitFrai.id }}</td>
+            </tr>
+            <tr>
+                <th>Quantity</th>
+                <td>{{ forfaitFrai.quantity }}</td>
+            </tr>
+            <tr>
+                <th>Datedufrais</th>
+                <td>{% if forfaitFrai.dateDuFrais %}{{ forfaitFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{% if forfaitFrai.created %}{{ forfaitFrai.created|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Derniereedition</th>
+                <td>{% if forfaitFrai.derniereEdition %}{{ forfaitFrai.derniereEdition|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('forfaitfrais_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('forfaitfrais_edit', { 'id': forfaitFrai.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

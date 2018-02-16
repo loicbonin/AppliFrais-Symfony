@@ -1,0 +1,15 @@
+frais_fichefrais:
+    resource: "@FraisBundle/Resources/config/routing/fichefrais.yml"
+    prefix:   /fichefrais
+
+frais_homepage:
+    path:     /
+    defaults: { _controller: FOSUserBundle:Security:login }
+
+frais_forfaithorsfrais:
+    resource: "@FraisBundle/Resources/config/routing/forfaithorsfrais.yml"
+    prefix:   /fichefrais/horsforfait
+
+frais_forfaitfrais:
+        resource: "@FraisBundle/Resources/config/routing/forfaitfrais.yml"
+        prefix:   /fichefrais/forfaitfrais

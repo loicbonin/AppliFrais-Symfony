@@ -1,0 +1,24 @@
+forfaitfrais_index:
+    path:     /
+    defaults: { _controller: "FraisBundle:ForfaitFrais:index" }
+    methods:  GET
+
+forfaitfrais_show:
+    path:     /{id}/show
+    defaults: { _controller: "FraisBundle:ForfaitFrais:show" }
+    methods:  GET
+
+forfaitfrais_new:
+    path:     /{ficheFraisId}/new
+    defaults: { _controller: "FraisBundle:ForfaitFrais:new" }
+    methods:  [GET, POST]
+
+forfaitfrais_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "FraisBundle:ForfaitFrais:edit" }
+    methods:  [GET, POST]
+
+forfaitfrais_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "FraisBundle:ForfaitFrais:delete" }
+    methods:  DELETE
