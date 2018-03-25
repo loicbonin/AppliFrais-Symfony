@@ -33,9 +33,11 @@
                                 <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>{{ HorsFrai.comment }}</td>
                                 <td>{{ HorsFrai.pieceJointe }}</td>
-                                <td>
-                                    <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">edit</a>
-                                </td>
+                                {% if "now"|date("d") > 10 and "now"|date("d") < 21 %}
+                                    <td>
+                                        <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">edit</a>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         {% for Frai in onefichefrais.frais %}
@@ -45,9 +47,11 @@
                                 <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td></td>
                                 <td></td>
+                                {% if "now"|date("d") > 10 and "now"|date("d") < 21 %}
                                 <td>
                                     <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">edit</a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -92,9 +96,6 @@
                                   <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                   <td>{{ HorsFrai.comment }}</td>
                                   <td>{{ HorsFrai.pieceJointe }}</td>
-                                  <td>
-                                      <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">edit</a>
-                                  </td>
                               </tr>
                           {% endfor %}
                         {% endif %}
@@ -106,9 +107,6 @@
                                   <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                   <td></td>
                                   <td></td>
-                                  <td>
-                                      <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">edit</a>
-                                  </td>
                               </tr>
                           {% endfor %}
                         {% endif %}

@@ -38,9 +38,12 @@
                             {% if HorsFrai.etat is not null %}
                                 <td>{{ Frai.etat.wording }}</td>
                             {% endif %}
-                            <td>
-                                <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">Modifier</a>
-                            </td>
+                            {% if "now"|date("d") < 11 %}
+                                <td>
+                                    <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">Modifier</a>
+                                </td>
+                            {% endif %}
+
                         </tr>
                     {% endfor %}
                     {% for Frai in onefichefrais.frais %}
@@ -53,9 +56,11 @@
                             {% endif %}
                             <td></td>
                             <td></td>
-                            <td>
-                                <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">Modifier</a>
-                            </td>
+                            {% if "now"|date("d") < 11 %}
+                                <td>
+                                    <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">Modifier</a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
