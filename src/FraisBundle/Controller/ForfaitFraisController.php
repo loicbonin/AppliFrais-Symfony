@@ -32,6 +32,7 @@ class ForfaitFraisController extends Controller
      */
     public function newAction(Request $request)
     {
+        
         $user = $this->getUser();
         $ficheFraisId = $request->attributes->get('ficheFraisId');
         $em = $this->getDoctrine()->getManager();
@@ -103,6 +104,26 @@ class ForfaitFraisController extends Controller
             'forfaitFrai' => $forfaitFrai,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Modifier l'état d'un forfait frais pour le comptable
+     *
+     */
+    public function editComptableAction(Request $request, ForfaitFrais $forfaitFrais)
+    {
+        $form = $this->createForm('FraisBundle\Form\ForfaitFraisComptableType', $forfaitFrais);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('forfaitfrais_edit_comptable', array('id' => $forfaitFrais->getId()));
+        }
+
+        return $this->render('forfaitfrais/etatEdit.html.twig', array(
+            'forfaitFrais' => $forfaitFrais,
+            'form' => $form->createView(),
         ));
     }
 

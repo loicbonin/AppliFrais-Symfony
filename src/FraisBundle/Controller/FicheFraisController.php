@@ -1,18 +1,29 @@
 <?php
 namespace FraisBundle\Controller;
+
 use FraisBundle\Entity\FicheFrais;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\View; // Utilisation de la vue de FOSRestBundle
+
 /**
- * Fichefrai controller.
+ * Fichefrais controller.
  *
  */
 class FicheFraisController extends Controller
 {
     /**
      * Lists all ficheFrai entities.
-     *
+     * @Security("has_role('ROLE_USER', 'ROLE_SUPER_ADMIN')")
      */
     public function indexAction(Request $request)
     {
@@ -46,6 +57,17 @@ class FicheFraisController extends Controller
                 }
             }
         }
+        elseif (null == $lastfichefrais)
+        {
+            foreach($lastfichefrais as $onefichefrais)
+            {
+                    $onefichefrais = new FicheFrais();
+                    $onefichefrais->setMonthyear(date('M - Y'));
+                    $onefichefrais->setUser($user);
+                    $em->persist($onefichefrais);
+                    $em->flush();
+            }
+        }
 
         return $this->render('fichefrais/index.html.twig', array(
             'ficheFrais' => $ficheFrais,
@@ -58,6 +80,10 @@ class FicheFraisController extends Controller
         ));
     }
 
+    /**
+     * @Security("has_role('ROLE_COMPTABLE', 'ROLE_SUPER_ADMIN')")
+     *
+     */
     public function indexAdminAction(Request $request)
     {
         $user = $this->getUser();
@@ -86,7 +112,23 @@ class FicheFraisController extends Controller
     }
 
     /**
-     * Creates a new ficheFrai entity.
+     * @Security("has_role('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+     *
+     */
+    public function indexSuperAdminAction(Request $request)
+    {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $listUsers = $em->getRepository('UserBundle:User')->findAll();
+
+        return $this->render('fichefrais/indexSuperAdmin.html.twig', array(
+            'listUsers' => $listUsers,
+            'user' => $user,
+        ));
+    }
+
+    /**
+     * Creation d'une nouvelle fiche frais.
      *
      */
     public function newAction(Request $request)
@@ -132,13 +174,33 @@ class FicheFraisController extends Controller
         ));
     }
     /**
-     * Displays a form to edit an existing ficheFrai entity.@
+     * Modifier une fiche frais existante
      *
      */
     public function editAction(Request $request, FicheFrais $ficheFrais) //Modifier en addhorsfrait
     {
         return $this->redirectToRoute('forfaithorsfrais_new', array(
             'ficheFraisId' => $ficheFrais->getId()));
+    }
+
+    /**
+     * Modifier l'état de la fiche frais pour le comptable
+     *
+     */
+    public function etatAction(Request $request, FicheFrais $ficheFrais)
+    {
+        $form = $this->createForm('FraisBundle\Form\FicheFraisComptableType', $ficheFrais);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('fichefrais_etat', array('id' => $ficheFrais->getId()));
+        }
+
+        return $this->render('fichefrais/etatEdit.html.twig', array(
+            'ficheFrais' => $ficheFrais,
+            'form' => $form->createView(),
+        ));
     }
 
     public function addForfaitFraisAction(Request $request, FicheFrais $ficheFrais) //Modifier en addhorsfrait
@@ -177,6 +239,74 @@ class FicheFraisController extends Controller
             ->setMethod('DELETE')
             ->getForm()
             ;
+    }
+
+    // ajout pour api rest
+
+    /**
+     * @param Request $request
+     * @Rest\View()
+     * @Rest\Get("/json/fichefrais/{id}")
+     */
+    public function getFicheFraisAction(Request $request)
+    {
+        $ficheFrais = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('FraisBundle:FicheFrais')
+            ->find($request->get('id'));
+        /* @var $ficheFrais FicheFrais */
+
+        if (empty($ficheFrais)) {
+            return new JsonResponse(['message' => 'fiche frais non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $ficheFrais;
+        /*$formatted = [
+            'id' => $ficheFrais->getId(),
+            'title' => $ficheFrais->getTitle(),
+            'monthYear' => $ficheFrais->getMonthyear(),
+            'comment' => $ficheFrais->getComment(),
+            'forfaitfrais' => $ficheFrais->getFrais(),
+            'forfaithorsfrais' => $ficheFrais->getHorsFrais(),
+            //'address' => $ficheFrais->getAddress(),
+        ];
+
+        return new JsonResponse($formatted);*/
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\View()
+     * @Rest\Get("/json/fichesfrais")
+     */
+    public function getFichesFraisAction(Request $request)
+    {
+        $user = $this->getUser();
+        $fiches = $this->get('doctrine.orm.entity_manager')->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
+        /* @var $fiches FicheFrais[] */
+
+        /*$formatted = [];
+        foreach ($fiches as $fiche) {
+            $formatted[] = [
+                'id' => $fiche->getId(),
+                'title' => $fiche->getTitle(),
+                'monthYear' => $fiche->getMonthyear(),
+            ];
+        }*/
+        //return new JsonResponse($formatted);
+        // Récupération du view handler
+        /*$viewHandler = $this->get('fos_rest.view_handler');
+        // Création d'une vue FOSRestBundle
+        $view = View::create($formatted);
+        $view->setFormat('json');
+        // Gestion de la réponse
+        return $viewHandler->handle($view);*/
+
+        /*$view = View::create($fiches);
+        $view->setFormat('json');
+
+        return $view;*/
+
+        return $fiches;
     }
 
 }

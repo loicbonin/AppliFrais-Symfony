@@ -1,0 +1,39 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block body %}
+    <div style="margin: 25px;" class="grey-text">
+        <i class="material-icons left grey-text">sync</i>Administration des utilisateurs
+        <div class="divider"></div>
+    </div>
+    <ul class="collapsible popout" data-collapsible="accordion">
+            <li>
+
+                    <table class="bordered highlight">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for u in listUsers %}
+                            <tr>
+                                <td>{{ u.firstName }}</td>
+                                <td>{{ u.lastName }}</td>
+                                <td>
+                                    <a href="{{ path('user_edit', { 'id': u.id }) }}">éditer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+            </li>
+    </ul>
+    <ul>
+        <li>
+            <a href="{{ path('user_new') }}">Créer un utilisateur</a>
+        </li>
+
+    </ul>
+{% endblock %}

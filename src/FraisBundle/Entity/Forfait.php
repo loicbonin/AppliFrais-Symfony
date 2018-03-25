@@ -35,7 +35,7 @@ class Forfait
      * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\ForfaitFrais")
      * @ORM\JoinColumn(nullable=false)
      *
-     *
+     */
     private $forfaitFrais;
     /**
      * Get id

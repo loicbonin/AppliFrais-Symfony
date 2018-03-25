@@ -4,7 +4,7 @@ frais:
 
 user:
     resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /usr
+    prefix:   /utilisateur
 
 front:
     resource: "@FrontBundle/Resources/config/routing.yml"
@@ -40,4 +40,17 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+#ROUTE API REST
+#users:
+#    type:     rest
+#    resource: UserBundle\Controller\UserController
+
+#fichesFrais:
+#    type:     rest
+#    resource: FraisBundle\Controller\FicheFraisController
+
+#auth-tokens:
+#    type:     rest
+#    resource: UserBundle\Controller\AuthTokenController
 

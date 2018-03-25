@@ -18,6 +18,11 @@ forfaitfrais_edit:
     defaults: { _controller: "FraisBundle:ForfaitFrais:edit" }
     methods:  [GET, POST]
 
+forfaitfrais_edit_comptable:
+    path:     /{id}/editforfaitfrais
+    defaults: { _controller: "FraisBundle:ForfaitFrais:editComptable" }
+    methods:  [GET, POST]
+
 forfaitfrais_delete:
     path:     /{id}/delete
     defaults: { _controller: "FraisBundle:ForfaitFrais:delete" }

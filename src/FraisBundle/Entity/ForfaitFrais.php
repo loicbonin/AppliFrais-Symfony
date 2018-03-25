@@ -72,12 +72,12 @@ class ForfaitFrais
      */
     private $ficheFrais;
 
-    /*
-     * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\Etat")
+    /**
+     * @ORM\ManyToOne(targetEntity="FraisBundle\Entity\Etat", inversedBy="forfaitFrais", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      *
-     *
-    private $etat; */
+     */
+    private $etat;
 
      public function __construct(){
         $this->created = new \DateTime();
@@ -282,5 +282,29 @@ class ForfaitFrais
     public function getForfait()
     {
         return $this->forfait;
+    }
+
+    /**
+     * Set etat
+     *
+     * @param \FraisBundle\Entity\Etat $etat
+     *
+     * @return ForfaitFrais
+     */
+    public function setEtat(\FraisBundle\Entity\Etat $etat = null)
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return \FraisBundle\Entity\Etat
+     */
+    public function getEtat()
+    {
+        return $this->etat;
     }
 }

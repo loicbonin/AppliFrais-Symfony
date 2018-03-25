@@ -52,22 +52,29 @@ class ForfaitHorsFrais
     /**
      * @var string [le commentaire du frais hors forfait]
      *
-     * @ORM\Column(name="comment", type="string", length=255)
+     * @ORM\Column(name="comment", type="string", length=255, nullable=true)
      */
     private $comment;
 
+    /**
+     *
+     * @ORM\Column(nullable=true)
+     */
     private $pieceJointe;
+
     private $tempFilename;
     // l'extension de piece jointe
     private $extension;
     // LIAISON ENTITEES
 
-    /*
-     * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\Etat")
-     * @ORM\JoinColumn(nullable=false)
+    /**
+     * @ORM\ManyToOne(targetEntity="FraisBundle\Entity\Etat", inversedBy="forfaitHorsFrais", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
      *
-     *
-    private $etat;*/
+     */
+    private $etat;
+
+
     /**
      * @ORM\ManyToOne(targetEntity="FraisBundle\Entity\FicheFrais", inversedBy="horsFrais", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
@@ -327,5 +334,29 @@ class ForfaitHorsFrais
     public function getFicheFrais()
     {
         return $this->ficheFrais;
+    }
+
+    /**
+     * Set etat
+     *
+     * @param \FraisBundle\Entity\Etat $etat
+     *
+     * @return ForfaitHorsFrais
+     */
+    public function setEtat(\FraisBundle\Entity\Etat $etat = null)
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return \FraisBundle\Entity\Etat
+     */
+    public function getEtat()
+    {
+        return $this->etat;
     }
 }

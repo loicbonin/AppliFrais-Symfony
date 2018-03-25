@@ -3,8 +3,19 @@
 namespace UserBundle\Controller;
 
 use UserBundle\Entity\User;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+use FOS\RestBundle\Controller\Annotations as Rest;
+//use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\View; // Utilisation de la vue de FOSRestBundle
 
 /**
  * User controller.
@@ -120,5 +131,128 @@ class UserController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    // ajout pour api rest
+
+    /**
+     * @param Request $request
+     * @Rest\View()
+     * @Rest\Get("/json/users")
+     */
+    public function getUsersAction(Request $request)
+    {
+        $users = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('UserBundle:User')
+            ->findAll();
+        /* @var $users User[] */
+
+        //return $users;
+
+        $formatted = [];
+        foreach ($users as $user) {
+            $formatted = [
+                'id' => $user->getId(),
+                'firstname' => $user->getFirstName(),
+                'lastname' => $user->getLastName(),
+                'email' => $user->getEmail(),
+                'job' => $user->getJob(),
+                'address' => $user->getAddress(),
+                'zipCode' => $user->getZipCode(),
+                'city' => $user->getCity(),
+                'birthDate' => $user->getBirthDate(),
+                'fuel' => $user->getFuel(),
+                'fiscalPower' => $user->getFiscalPower(),
+                'hiringDate' => $user->getHiringDate(),
+
+            ];
+        }
+        $view = View::create($formatted);
+        $view->setFormat('json');
+
+        return $view;
+        //return new JsonResponse($formatted);
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\View()
+     * @Rest\Get("/json/user")
+     */
+    public function getUserAction(Request $request)
+    {
+        $user = $this->getUser();
+        /*$user = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('UserBundle:User')
+            ->find($request->get('user_id'));*/
+        /* @var $user User */
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $formatted = [
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstName(),
+            'lastname' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'job' => $user->getJob(),
+            'address' => $user->getAddress(),
+            'zipCode' => $user->getZipCode(),
+            'city' => $user->getCity(),
+            'birthDate' => $user->getBirthDate(),
+            'fuel' => $user->getFuel(),
+            'fiscalPower' => $user->getFiscalPower(),
+            'hiringDate' => $user->getHiringDate(),
+
+        ];
+
+        $view = View::create($formatted);
+        $view->setFormat('json');
+
+        return $view;
+        //return new JsonResponse($formatted);
+
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\View()
+     * @Rest\Get("/json/oneuser/{id}")
+     */
+    public function getOneUserAction($id, Request $request)
+    {
+
+        $user = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('UserBundle:User')
+            ->find($request->get($id));
+        /* @var $user User */
+
+        if (empty($user)) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $formatted = [
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstName(),
+            'lastname' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'job' => $user->getJob(),
+            'address' => $user->getAddress(),
+            'zipCode' => $user->getZipCode(),
+            'city' => $user->getCity(),
+            'birthDate' => $user->getBirthDate(),
+            'fuel' => $user->getFuel(),
+            'fiscalPower' => $user->getFiscalPower(),
+            'hiringDate' => $user->getHiringDate(),
+
+        ];
+
+        $view = View::create($formatted);
+        $view->setFormat('json');
+
+        return $view;
+        //return new JsonResponse($formatted);
+
     }
 }

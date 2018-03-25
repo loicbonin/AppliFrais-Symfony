@@ -30,17 +30,22 @@ framework:
     session:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
-        save_path: "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+        #save_path: "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+        save_path: /var/lib/php/sessions
     fragments: ~
     http_method_override: true
     assets: ~
     php_errors:
         log: true
+    serializer:
+        enabled: true
 
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes:
+      - 'materialize_form_theme.html.twig'
   #  form_themes:
 
             # default:
@@ -91,3 +96,16 @@ fos_user:
     from_email:
         address: "%mailer_user%"
         sender_name: "%mailer_user%"
+
+
+fos_rest:
+    routing_loader:
+        include_format: false
+    exception:
+        enabled: true
+    view:
+        view_response_listener: true
+    format_listener:
+        rules:
+            - { path: '^/json', priorities: ['json'], fallback_format: 'json' }
+            - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }

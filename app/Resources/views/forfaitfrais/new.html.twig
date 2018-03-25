@@ -41,9 +41,14 @@
 {% block body %}
     <h1>Forfaitfrai creation</h1>
 
+
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+
+    {{ form_row(form.forfait, {'attr': {'class': 'browser-default'}}) }}
+    {{ form_row(form.quantity, {'attr': {'class': 'validate'}}) }}
+    {{ form_row(form.dateDuFrais, {'attr': {'class': 'datepicker', 'type': 'text'}}) }}
+    {#{ form_row(form.pieceJointe, {'attr': {'class': 'validate'}}) }#}
+    <input type="submit" value="Create" />
     {{ form_end(form) }}
 
     <ul>

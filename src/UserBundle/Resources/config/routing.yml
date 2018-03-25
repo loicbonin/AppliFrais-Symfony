@@ -2,6 +2,3 @@ user_user:
     resource: "@UserBundle/Resources/config/routing/user.yml"
     prefix:   /user
 
-user_homepage:
-    path:     /
-    defaults: { _controller: UserBundle:Default:index }

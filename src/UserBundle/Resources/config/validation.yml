@@ -1,0 +1,12 @@
+# src/UserBundle/Resources/config/validation.yml
+
+# ...
+
+#UserBundle\Entity\Credentials:
+ #   properties:
+  #      login:
+  #          - NotBlank: ~
+   #         - Type: string
+   #     password:
+    #        - NotBlank: ~
+     #       - Type: string

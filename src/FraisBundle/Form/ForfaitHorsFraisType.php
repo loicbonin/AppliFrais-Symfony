@@ -19,8 +19,7 @@ class ForfaitHorsFraisType extends AbstractType
             ->add('wording')
             ->add('price')
             ->add('dateDuFrais')
-            ->add('comment')
-            ->add('pieceJointe', FileType::class)
+            ->add('pieceJointe', FileType::class, array('required'   => false,))
         ;
     }
     

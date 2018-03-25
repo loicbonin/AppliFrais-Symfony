@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new FrontBundle\FrontBundle(),
             new UserBundle\UserBundle(),
             new FraisBundle\FraisBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
             new FOS\UserBundle\FOSUserBundle()
         ];
 

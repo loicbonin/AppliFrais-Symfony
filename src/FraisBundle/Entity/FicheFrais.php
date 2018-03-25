@@ -56,12 +56,12 @@ class FicheFrais
 
     // LIAISON ENTITEES
 
-    /*
-     * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\Etat")
+    /**
+     * @ORM\ManyToOne(targetEntity="FraisBundle\Entity\Etat", inversedBy="ficheFrais", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      *
-     *
-    private $etat;*/
+     */
+    private $etat;
 
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="ficheFrais", cascade={"persist"})
@@ -320,5 +320,29 @@ class FicheFrais
     public function getFrais()
     {
         return $this->frais;
+    }
+
+    /**
+     * Set etat
+     *
+     * @param \FraisBundle\Entity\Etat $etat
+     *
+     * @return FicheFrais
+     */
+    public function setEtat(\FraisBundle\Entity\Etat $etat = null)
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return \FraisBundle\Entity\Etat
+     */
+    public function getEtat()
+    {
+        return $this->etat;
     }
 }

@@ -83,6 +83,27 @@ class ForfaitHorsFraisController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+    /**
+     * Modifier l'état d'un forfait hors frais pour le comptable
+     *
+     */
+    public function editComptableAction(Request $request, ForfaitHorsFrais $forfaitHorsFrais)
+    {
+        $form = $this->createForm('FraisBundle\Form\ForfaitHorsFraisComptableType', $forfaitHorsFrais);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('forfaithorsfrais_edit_comptable', array('id' => $forfaitHorsFrais->getId()));
+        }
+
+        return $this->render('forfaithorsfrais/etatEdit.html.twig', array(
+            'forfaitHorsFrais' => $forfaitHorsFrais,
+            'form' => $form->createView(),
+        ));
+    }
+
     /**
      * Deletes a forfaitHorsFrai entity.
      *

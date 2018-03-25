@@ -8,6 +8,11 @@ index_admin:
     defaults: { _controller: "FraisBundle:FicheFrais:indexAdmin" }
     methods:  GET
 
+index_super_admin:
+    path:     /indexsuperadmin
+    defaults: { _controller: "FraisBundle:FicheFrais:indexSuperAdmin" }
+    methods:  GET
+
 fichefrais_show:
     path:     /{id}/show
     defaults: { _controller: "FraisBundle:FicheFrais:show" }
@@ -21,6 +26,11 @@ fichefrais_new:
 fichefrais_edit:
     path:     /{id}/edit
     defaults: { _controller: "FraisBundle:FicheFrais:edit" }
+    methods:  [GET, POST]
+
+fichefrais_etat:
+    path:     /{id}/etat
+    defaults: { _controller: "FraisBundle:FicheFrais:etat" }
     methods:  [GET, POST]
 
 fichefrais_addForfaitFrais:
