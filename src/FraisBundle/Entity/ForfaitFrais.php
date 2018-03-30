@@ -43,11 +43,11 @@ class ForfaitFrais
     private $derniereEdition;
 
     /**
-     * @var string [le commentaire du frais hors forfait]
+     * @var string [le commentaire du frais forfait]
      *
      * @ORM\Column(name="comment", type="string", length=255, nullable=true)
-     *
-    private $comment;*/
+     */
+    private $comment;
 
     /**
      * @var string
@@ -59,7 +59,7 @@ class ForfaitFrais
     // LIAISON ENTITEES
 
     /**
-     * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\Forfait", mappedBy="forfaitFrais", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="FraisBundle\Entity\Forfait", inversedBy="forfaitFrais", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      *
      */

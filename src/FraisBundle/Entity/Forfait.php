@@ -32,7 +32,7 @@ class Forfait
     // LIAISON ENTITEES
 
     /*
-     * @ORM\ManyToMany(targetEntity="FraisBundle\Entity\ForfaitFrais")
+     * @ORM\OneToMany(targetEntity="FraisBundle\Entity\ForfaitFrais", mappedBy="frais", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      *
      */

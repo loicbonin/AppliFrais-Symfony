@@ -241,6 +241,45 @@ class FicheFraisController extends Controller
             ;
     }
 
+    /**
+     * Download a pdf.
+     *
+     */
+    public function pdfAction(Request $request, FicheFrais $ficheFrais)
+    {
+        $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+        $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'fontDir' => array_merge($fontDirs, [
+                __DIR__ . '/../fonts',
+            ]),
+            'fontdata' => $fontData + [
+                    'freeMono' => [
+                        'R' => 'FreeMono.ttf',
+                        'M' => 'FreeMonoOblique.ttf',
+                        'B' => 'FreeMonoBold.ttf',
+                    ],
+                ],
+            'default_font' => 'freeMono',
+            'img_dpi' => 150,
+            'dpi' => 150,
+            'margin-footer' => 0,
+            'margin-bottom' => 0,
+            'defaultfooterline' => 0,
+            'showStats' => true,
+        ]);
+        $html =  $this->render('fichefrais/pdf.html.twig', array(
+            'ficheFrais' => $ficheFrais,
+        ));
+        $mpdf->shrink_tables_to_fit = 1;
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('GSB '.$ficheFrais->getMonthyear().'.pdf', \Mpdf\Output\Destination::DOWNLOAD);
+    }
+
     // ajout pour api rest
 
     /**

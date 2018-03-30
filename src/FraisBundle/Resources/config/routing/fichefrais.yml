@@ -13,6 +13,12 @@ index_super_admin:
     defaults: { _controller: "FraisBundle:FicheFrais:indexSuperAdmin" }
     methods:  GET
 
+fichefrais_pdf:
+    path:     /{id}/pdf
+    defaults: { _controller: "FraisBundle:FicheFrais:pdf" }
+    methods:  GET
+
+
 fichefrais_show:
     path:     /{id}/show
     defaults: { _controller: "FraisBundle:FicheFrais:show" }
