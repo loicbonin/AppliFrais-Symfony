@@ -10,9 +10,22 @@
             <div class="collapsible-header">
                 <i class="material-icons blue-text text-darken-4">note</i>
                 {{ onefichefrais.monthyear }}
-                {% if onefichefrais.etat %}
-                    {{ onefichefrais.etat }}
-                {% endif %}
+                <tr>
+                    <th>|  état: </th>
+                </tr>
+                <tr>
+                    <td>
+                        {% if onefichefrais.etat %}
+                            {{ onefichefrais.etat }}
+                        {% elseif "now"|date("d") < 11 %}
+                            ouvert
+                        {% elseif "now"|date("d") > 10 %}
+                            En traitement
+                        {% elseif "now"|date("d") > 20 %}
+                            En cours de paiement
+                        {% endif %}
+                    </td>
+                </tr>
             </div>
             <div class="collapsible-body">
 
@@ -25,6 +38,9 @@
                         <th>Commentaire</th>
                         <th>Etat</th>
                         <th>Pièce jointe</th>
+                        {% if "now"|date("d") < 11 %}
+                            <th>action(s)</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -32,12 +48,32 @@
                         <tr>
                             <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                             <td>{{ HorsFrai.wording }}</td>
-                            <td>{{ HorsFrai.price }}</td>
-                            <td>{{ HorsFrai.comment }}</td>
-                            <td>{{ HorsFrai.pieceJointe }}</td>
-                            {% if HorsFrai.etat is not null %}
-                                <td>{{ Frai.etat.wording }}</td>
-                            {% endif %}
+                            <td>{{ HorsFrai.price }} €</td>
+                            <td>
+                                {% if HorsFrai.comment %}
+                                    {{ HorsFrai.comment }}
+                                {% else %}
+                                    Pas de commentaire
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if HorsFrai.etat is not null %}
+                                    {{ HorsFrai.etat.wording }}
+                                {% elseif "now"|date("d") < 11 %}
+                                    Pas encore traité
+                                {% elseif "now"|date("d") > 10 %}
+                                    En traitement
+                                {% elseif "now"|date("d") > 20 %}
+                                    Veuillez contacter la comptabilité
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if HorsFrai.pieceJointe %}
+                                    {{ HorsFrai.pieceJointe }}
+                                {% else %}
+                                    Pas de pièce jointe
+                                {% endif %}
+                            </td>
                             {% if "now"|date("d") < 11 %}
                                 <td>
                                     <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">Modifier</a>
@@ -49,13 +85,26 @@
                     {% for Frai in onefichefrais.frais %}
                         <tr>
                             <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{{ Frai.type }}</td>
-                            <td>{{ Frai.quantity }}</td>
-                            {% if Frai.etat is not null %}
-                                <td>{{ Frai.etat.wording }}</td>
-                            {% endif %}
-                            <td></td>
-                            <td></td>
+                            <td>{{ Frai.forfait.wording }}</td>
+                            <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
+                            <td>
+                                {% if Frai.comment %}
+                                    {{ Frai.comment }}
+                                {% else %}
+                                    Pas de commentaire
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if Frai.etat is not null %}
+                                    {{ Frai.etat.wording }}
+                                {% elseif "now"|date("d") < 11 %}
+                                    Pas encore traité
+                                {% elseif "now"|date("d") > 10 %}
+                                    En traitement
+                                {% elseif "now"|date("d") > 20 %}
+                                    Veuillez contacter la comptabilité
+                                {% endif %}
+                            </td>
                             {% if "now"|date("d") < 11 %}
                                 <td>
                                     <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">Modifier</a>
@@ -66,7 +115,8 @@
                     </tbody>
                 </table>
                 <div>
-                    <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                    <a href="{{ path('fichefrais_pdf', { 'id': onefichefrais.id, 'name': attribute(onefichefrais, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                   {# <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>#}
                 </div>
             </div>
         </li>
