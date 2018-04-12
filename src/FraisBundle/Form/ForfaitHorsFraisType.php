@@ -6,6 +6,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+
 
 
 class ForfaitHorsFraisType extends AbstractType
@@ -16,10 +20,17 @@ class ForfaitHorsFraisType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('wording')
-            ->add('price')
-            ->add('dateDuFrais')
-            ->add('pieceJointe', FileType::class, array('required'   => false,))
+            ->add('wording', TextType::class, array('label' => 'libellé'))
+            ->add('price', TextType::class, array('label' => 'prix'))
+            ->add('dateDuFrais', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => [
+                    'class' => 'datepicker',
+                ],
+                'format' => 'dd/MM/yyyy',
+                'label' => 'date du frais'))
+            ->add('pieceJointe', FileType::class, array('required'   => false, 'label' => 'pièce jointe'))
         ;
     }
     
