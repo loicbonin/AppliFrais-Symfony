@@ -74,9 +74,9 @@ class User extends BaseUser
     private $city;
 
     /**
-     * @var string
+     * @var date
      *
-     * @ORM\Column(name="birth_date", type="string", length=255, nullable=true)
+     * @ORM\Column(name="birth_date", type="date", length=255, nullable=true)
      */
     private $birthDate;
 
