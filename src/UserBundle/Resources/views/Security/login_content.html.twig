@@ -46,14 +46,17 @@
                             <label for="password">{{ 'security.login.password'|trans }}</label>
                             <input type="password" id="password" name="_password" required="required" />
                         </div>
+                        {#
                         <div class="input-field col s12">
                             <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
                             <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
                         </div>
+                        #}
                     </div>
                     <br>
-                    <input class="btn waves-effect waves-light blue darken-4"  type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
-
+                    <center>
+                        <input class="btn blue darken-4" type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+                    </center>
 
                 </form>
             </div>

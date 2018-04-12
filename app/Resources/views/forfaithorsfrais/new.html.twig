@@ -38,17 +38,28 @@
             </div>#}
         {% endblock %}
 {% block body %}
-    <h1>Forfaithorsfrai creation</h1>
+    <h1>Fais Hors Forfait</h1>
 
     {{ form_start(form) }}
 
-    {{ form_row(form.wording, {'attr': {'class': 'validate'}}) }}
-    {{ form_row(form.price, {'attr': {'class': 'validate'}}) }}
-    {{ form_row(form.dateDuFrais, {'attr': {'class': 'timepicker'}}) }}
-    {{ form_row(form.pieceJointe, {'attr': {'class': 'validate'}}) }}
+    {{ form_row(form.wording, {'attr': {'class': 'validate',}}) }}
+    {{ form_row(form.price, {'attr': {'class': 'validate',}}) }}
+    {{ form_widget(form.dateDuFrais, {'attr': {'class': 'datepicker'}}) }}
+    <form action="#">
+        <div class="file-field input-field">
+            <div class="btn">
+                <span>File</span>
+                <input type="file">
+            </div>
+            <div class="file-path-wrapper">
+                {{ form_row(form.pieceJointe, {'attr': {'class': 'file-path validate',}}) }}
+            </div>
+        </div>
+    </form>
 
-
-    <input class="waves-effect waves-light btn red darken-2" type="submit" value="Ajouter" />
+    <div>
+        <input class="waves-effect waves-light btn red darken-2" type="submit" value="Ajouter" />
+    </div>
 
     {{ form_end(form) }}
 

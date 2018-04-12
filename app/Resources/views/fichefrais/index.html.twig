@@ -3,10 +3,10 @@
 {% block body %}
     <div style="margin: 25px;" class="green-text">
         <i class="material-icons left green-text">sync</i>Fiches frais du mois
-        <div class="divider"></div>
+        <div class="divider green"></div>
     </div>
     <ul class="collapsible popout" data-collapsible="accordion">
-        <li>
+        <li class="active">
             <div class="collapsible-header">
                 <i class="material-icons blue-text text-darken-4">note</i>
                 {{ onefichefrais.monthyear }}
@@ -32,6 +32,7 @@
                 <table class="bordered highlight">
                     <thead>
                     <tr>
+                        <th>Type de Frais</th>
                         <th>Date</th>
                         <th>Intitulé</th>
                         <th>Prix</th>
@@ -46,6 +47,7 @@
                     <tbody>
                     {% for HorsFrai in onefichefrais.horsFrais %}
                         <tr>
+                            <td>Hors Forfait</td>
                             <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                             <td>{{ HorsFrai.wording }}</td>
                             <td>{{ HorsFrai.price }} €</td>
@@ -84,6 +86,7 @@
                     {% endfor %}
                     {% for Frai in onefichefrais.frais %}
                         <tr>
+                            <td>Forfait</td>
                             <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                             <td>{{ Frai.forfait.wording }}</td>
                             <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
@@ -114,7 +117,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                <div>
+                <div style="margin-top: 30px;">
                     <a href="{{ path('fichefrais_pdf', { 'id': onefichefrais.id, 'name': attribute(onefichefrais, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
                    {# <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>#}
                 </div>
@@ -136,6 +139,7 @@
                     <table class="bordered highlight">
                         <thead>
                             <tr>
+                              <th>Type de Frais</th>
                               <th>Intitulé</th>
                               <th>Prix</th>
                               <th>Date</th>
@@ -146,8 +150,9 @@
                         <tbody>
                           {% for HorsFrai in forfaitHorsFrais %}
                               <tr>
+                                  <td>Hors Forfait</td>
                                   <td>{{ HorsFrai.wording }}</td>
-                                  <td>{{ HorsFrai.price }}</td>
+                                  <td>{{ HorsFrai.price }} €</td>
                                   <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                   <td>{{ HorsFrai.comment }}</td>
                                   <td>{{ HorsFrai.pieceJointe }}</td>
@@ -155,8 +160,9 @@
                           {% endfor %}
                           {% for Frai in forfaitFrais %}
                               <tr>
+                                  <td>Forfait</td>
                                   <td>{{ Frai.type }}</td>
-                                  <td>{{ Frai.quantity }}</td>
+                                  <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
                                   <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                   <td></td>
                                   <td></td>
@@ -164,7 +170,7 @@
                           {% endfor %}
                         </tbody>
                     </table>
-                    <div>
+                    <div style="margin-top: 30px;">
                       <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
                     </div>
                 </div>

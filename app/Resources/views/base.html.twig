@@ -24,8 +24,7 @@
                         {% if not is_granted("ROLE_ADMIN") %}
                             <li><a class="btn-floating btn waves-effect waves-light transparent z-depth-0 modal-trigger" href="#addNoteModal"><i class="material-icons">add</i></a></li>
                         {% endif %}
-                        <li><a onclick="$('.tap-target').tapTarget('open');" href="#">Aide</a></li>
-                        <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                        <li><a href="{{ path('user_edit', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
                         <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
                     {% else %}
                         <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
@@ -33,12 +32,7 @@
                 </ul>
             </div>
         </nav>
-        <div class="tap-target" data-activates="menu">
-            <div class="tap-target-content">
-                <h5>Besoin d'aide ?</h5>
-                <p>Cliquez sur le bouton plus pour ajouter une ou plusieurs notes de frais.</p>
-            </div>
-        </div>
+
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
             {% if not is_granted("ROLE_ADMIN") %}
                 {% if lastfichefrais is defined %}
@@ -62,9 +56,13 @@
         {% endblock %}
     </div>
     {% block javascripts %}
+        {#<script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>#}
+
         <script type="text/javascript" src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/materialize.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/materialize.min.js') }}"></script>
+
+
     {% endblock %}
     </body>
 </html>
