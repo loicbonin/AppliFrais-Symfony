@@ -10,4 +10,17 @@ namespace UserBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /*public function getUserByRole()
+    {
+        $request = $this->createQueryBuilder('u')
+            ->where('u.roles = a:0:{}' )
+            ->andWhere('u.roles = a:1:{i:0;s:9:"ROLE_USER";}')
+            ->orderBy('u.lastName', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+        return $request;
+
+
+    }*/
 }
