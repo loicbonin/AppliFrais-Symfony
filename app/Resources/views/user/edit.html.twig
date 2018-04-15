@@ -30,6 +30,7 @@
     <div class="card" style="padding: 30px;">
 
         {{ form_start(edit_form) }}
+            {{ form_widget(edit_form._token) }}
             <div class="row">
                 <div class="col m6 s12">
                     {{ form_row(edit_form.firstName, {'attr': {'class': 'validate',}}) }}
@@ -50,11 +51,12 @@
                     {{ form_row(edit_form.city, {'attr': {'class': 'validate',}}) }}
                 </div>
                 <div class="col m6 s12">
-                    {{ form_row(edit_form.birthDate, {'attr': {'class': 'validate datepicker',}}) }}
+                    <label>date d'embauche</label>
+                    {{ form_widget(edit_form.hiringDate, {'attr': {'class': 'validate datepicker',}}) }}
                 </div>
             </div>
             <div style="margin-top: 20px;">
-                <input class="btn blue darken-4" type="submit" value="Enregistrer" />
+                <input class="btn green darken-3" type="submit" value="Enregistrer" />
             </div>
         {{ form_end(edit_form, {'render_rest': false}) }}
 

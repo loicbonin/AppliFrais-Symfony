@@ -12,20 +12,29 @@
                 {{ onefichefrais.monthyear }}
                 <tr>
                     <th>|  état: </th>
-                </tr>
-                <tr>
                     <td>
                         {% if onefichefrais.etat %}
                             {{ onefichefrais.etat }}
-                        {% elseif "now"|date("d") < 11 %}
-                            ouvert
-                        {% elseif "now"|date("d") > 10 %}
-                            En traitement
-                        {% elseif "now"|date("d") > 20 %}
-                            En cours de paiement
+                        {% else %}
+                            Ouvert
                         {% endif %}
                     </td>
+                    <th>|  Montant total: </th>
+                    <td>
+                        {% set totalFrai = 0 %}
+                        {% set totalHorsFrai = 0 %}
+                        {% set totalFicheFrai = 0 %}
+                        {% for Frai in onefichefrais.frais %}
+                            {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                        {% endfor %}
+                        {% for HorsFrai in onefichefrais.horsFrais %}
+                            {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                        {% endfor %}
+                        {% set totalFicheFrai = totalHorsFrai + totalFrai %}
+                        {{ totalFicheFrai }}€
+                    </td>
                 </tr>
+
             </div>
             <div class="collapsible-body">
 
@@ -61,26 +70,22 @@
                             <td>
                                 {% if HorsFrai.etat is not null %}
                                     {{ HorsFrai.etat.wording }}
-                                {% elseif "now"|date("d") < 11 %}
+                                {% else %}
                                     Pas encore traité
-                                {% elseif "now"|date("d") > 10 %}
-                                    En traitement
-                                {% elseif "now"|date("d") > 20 %}
-                                    Veuillez contacter la comptabilité
                                 {% endif %}
                             </td>
                             <td>
                                 {% if HorsFrai.pieceJointe %}
-                                    {{ HorsFrai.pieceJointe }}
+                            <a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a>
                                 {% else %}
                                     Pas de pièce jointe
                                 {% endif %}
                             </td>
-                            {% if "now"|date("d") < 11 %}
+                            {# {% if "now"|date("d") < 11 %} #}
                                 <td>
                                     <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">Modifier</a>
                                 </td>
-                            {% endif %}
+                            {# {% endif %} #}
 
                         </tr>
                     {% endfor %}
@@ -100,26 +105,25 @@
                             <td>
                                 {% if Frai.etat is not null %}
                                     {{ Frai.etat.wording }}
-                                {% elseif "now"|date("d") < 11 %}
+                                {% else %}
                                     Pas encore traité
-                                {% elseif "now"|date("d") > 10 %}
-                                    En traitement
-                                {% elseif "now"|date("d") > 20 %}
-                                    Veuillez contacter la comptabilité
                                 {% endif %}
                             </td>
-                            {% if "now"|date("d") < 11 %}
+                            <td>
+                                Pas de pièce jointe
+                            </td>
+                            {# {% if "now"|date("d") < 11 %} #}
                                 <td>
                                     <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">Modifier</a>
                                 </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <div style="margin-top: 30px;">
-                    <a href="{{ path('fichefrais_pdf', { 'id': onefichefrais.id, 'name': attribute(onefichefrais, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
-                   {# <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>#}
+                            {# {% endif %}  #}
+                         </tr>
+                     {% endfor %}
+                     </tbody>
+                 </table>
+                 <div style="margin-top: 30px;">
+                     <a href="{{ path('fichefrais_pdf', { 'id': onefichefrais.id, 'name': attribute(onefichefrais, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                    {# <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>#}
                 </div>
             </div>
         </li>
@@ -134,6 +138,30 @@
                 <div class="collapsible-header">
                     <i class="material-icons blue-text text-darken-4">note</i>
                     {{ ficheFrai.monthyear }}
+                    <tr>
+                        <th>|  état: </th>
+                        <td>
+                            {% if onefichefrais.etat %}
+                                {{ onefichefrais.etat }}
+                            {% else %}
+                                En traitement
+                            {% endif %}
+                        </td>
+                        <th>|  Montant total: </th>
+                        <td>
+                            {% set totalFrai = 0 %}
+                            {% set totalHorsFrai = 0 %}
+                            {% set totalFicheFrai = 0 %}
+                            {% for Frai in ficheFrai.frais %}
+                                {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                            {% endfor %}
+                            {% for HorsFrai in ficheFrai.horsFrais %}
+                                {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                            {% endfor %}
+                            {% set totalFicheFrai = totalHorsFrai + totalFrai %}
+                            {{ totalFicheFrai }}€
+                        </td>
+                    </tr>
                 </div>
                 <div class="collapsible-body">
                     <table class="bordered highlight">
@@ -148,17 +176,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                          {% for HorsFrai in forfaitHorsFrais %}
+                          {% for HorsFrai in ficheFrai.horsFrais %}
                               <tr>
                                   <td>Hors Forfait</td>
                                   <td>{{ HorsFrai.wording }}</td>
                                   <td>{{ HorsFrai.price }} €</td>
                                   <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
                                   <td>{{ HorsFrai.comment }}</td>
-                                  <td>{{ HorsFrai.pieceJointe }}</td>
+                                  <td><a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a></td>
                               </tr>
                           {% endfor %}
-                          {% for Frai in forfaitFrais %}
+                          {% for Frai in ficheFrai.frais %}
                               <tr>
                                   <td>Forfait</td>
                                   <td>{{ Frai.type }}</td>

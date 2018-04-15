@@ -1,21 +1,68 @@
 {% extends 'base.html.twig' %}
-
+{% block nav %}
+    <nav class="blue darken-4">
+        <div class="nav-wrapper">
+            {% if is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('index_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+            {% else %}
+                <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+            {% endif %}            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    {#<li><a class="btn-floating btn waves-effect waves-light transparent z-depth-0 modal-trigger" href="#addNoteModal"><i class="material-icons">add</i></a></li>#}
+                    <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                    <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
+                {% else %}
+                    <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
 {% block body %}
-    <h1>Forfaithorsfrai edit</h1>
+    <div style="margin: 25px;">
+        <i class="material-icons left">add</i>Frais hors forfait
+        <div class="divider"></div>
+    </div>
+    <div class="card" style="padding: 30px;">
+        {{ form_start(edit_form) }}
+        <div class="row">
+            <div class="col m9 s12">
+                {{ form_row(edit_form.wording, {'attr': {'class': 'validate', }}) }}
+            </div>
+            <div class="col m3 s12">
+                {{ form_row(edit_form.price, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                <label>date du frais</label>
+                {{ form_widget(edit_form.dateDuFrais, {'attr': {'class': 'datepicker'}}) }}
+            </div>
+            <div class="col m6 s12" action="#">
+                <div class="file-field input-field">
+                    <div class="btn-flat grey darken-3 white-text">
+                        <span>Ajouter une pièce jointe</span>
+                        <input type="file">
+                    </div>
+                    <div class="file-path-wrapper">
+                        {{ form_widget(edit_form.pieceJointe, {'attr': {'class': 'file-path validate',}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+            <input class="btn green darken-3" type="submit" value="Valider l'édition    " />
+        </div>
+        {{ form_end(edit_form) }}
+        {{ form_start(delete_form) }}
+            <div style="margin: 30px 0px;">
+                <input class=" btn red darken-4" type="submit" value="Supprimer le frais">
+            </div>
+        {{ form_end(delete_form) }}
 
-    {{ form_start(edit_form) }}
-    {{ form_widget(edit_form) }}
-    <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+    </div>
+        <div style="margin: 30px 0px;">
+            <a class="waves-effect waves-light btn blue darken-4" href="{{ path('fichefrais_index') }}">Retour à l'accueil</a>
+        </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('forfaithorsfrais_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+
+
 {% endblock %}

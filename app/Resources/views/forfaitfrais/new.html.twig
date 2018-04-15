@@ -9,7 +9,6 @@
             {% endif %}            <ul id="nav-mobile" class="right hide-on-med-and-down">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     {#<li><a class="btn-floating btn waves-effect waves-light transparent z-depth-0 modal-trigger" href="#addNoteModal"><i class="material-icons">add</i></a></li>#}
-                    <li><a onclick="$('.tap-target').tapTarget('open');" href="#">Aide</a></li>
                     <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
                     <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
                 {% else %}
@@ -18,42 +17,37 @@
             </ul>
         </div>
     </nav>
-    <div class="tap-target" data-activates="menu">
-        <div class="tap-target-content">
-            <h5>Besoin d'aide ?</h5>
-            <p>Cliquez sur le bouton plus afin d'ajouter une ou plusieurs notes de frais.</p>
-        </div>
-    </div>
-    {#
-    <div id="addNoteModal" class="modal" style="width: 400px;">
-        <div class="modal-content">
-            <i class="material-icons right modal-close black-text">close</i>
-            <h4>Ajouter une note</h4>
-            <p>Quel type de note voulez vous ajouter ?</p>
-            <center>
-                <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('fichefrais_new') }}" style="width: 100%; margin-top: 20px;">note forfait</a>
-                <a class="waves-effect waves-light btn blue darken-4 modal-trigger" onclick="$('#addNoteModal').modal('close');" href="{{ path('fichefrais_new') }}" style="width: 100%; margin-top: 10px;">note hors forfait</a>
-            </center>
-        </div>
-    </div>#}
 {% endblock %}
 
 {% block body %}
-    <h1>Forfaitfrai creation</h1>
+    <div style="margin: 25px;">
+        <i class="material-icons left">add</i>Frais forfait
+        <div class="divider"></div>
+    </div>
 
+    <div class="card" style="padding: 30px;">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col m9 s12">
+                {{ form_row(form.forfait, {'attr': {'class': 'browser-default'}}) }}
+            </div>
+            <div class="col m3 s12">
+                {{ form_row(form.quantity, {'attr': {'class': 'validate'}}) }}
+            </div>
+            <div class="col m6 s12">
+                <label class="required">date du frais</label>
+                {{ form_widget(form.dateDuFrais, {'attr': {'class': 'datepicker'}}) }}
+            </div>
+            {#{ form_row(form.pieceJointe, {'attr': {'class': 'validate'}}) }#}
+        </div>
+        <div style="margin-top: 20px;">
+            <input class="btn green darken-3" type="submit" value="Ajouter" />
+        </div>
 
-    {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
 
-    {{ form_row(form.forfait, {'attr': {'class': 'browser-default'}}) }}
-    {{ form_row(form.quantity, {'attr': {'class': 'validate'}}) }}
-    {{ form_row(form.dateDuFrais, {'attr': {'class': 'datepicker', 'type': 'text'}}) }}
-    {#{ form_row(form.pieceJointe, {'attr': {'class': 'validate'}}) }#}
-    <input type="submit" value="Create" />
-    {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('fichefrais_index') }}">Retour à l'accueil</a>
-        </li>
-    </ul>
+    <div style="margin: 30px 0px;">
+        <a class="waves-effect waves-light btn blue darken-4" href="{{ path('fichefrais_index') }}">Retour à l'accueil</a>
+    </div>
 {% endblock %}
