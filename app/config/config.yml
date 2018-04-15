@@ -10,6 +10,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: fr
+    pieceJointes: '%kernel.root_dir%/../web/uploads/pieceJointes'
 
 framework:
     #esi: ~
@@ -44,8 +45,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
-    form_themes:
-      - 'materialize_form_theme.html.twig'
+    #form_themes:
+     # - 'materialize_form_theme.html.twig'
   #  form_themes:
 
             # default:
