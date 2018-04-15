@@ -27,14 +27,14 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="first_name", type="string", length=255)
      */
     private $firstName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="last_name", type="string", length=255)
      */
     private $lastName;
 
@@ -74,9 +74,9 @@ class User extends BaseUser
     private $city;
 
     /**
-     * @var date
+     * @var \DateTime
      *
-     * @ORM\Column(name="birth_date", type="date", length=255, nullable=true)
+     * @ORM\Column(name="birth_date", type="date", nullable=true)
      */
     private $birthDate;
 
@@ -95,9 +95,9 @@ class User extends BaseUser
     private $fiscalPower;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="hiring_date", type="string", length=255, nullable=true)
+     * @ORM\Column(name="hiring_date", type="datetime", nullable=true)
      */
     private $hiringDate;
 
@@ -108,6 +108,10 @@ class User extends BaseUser
      */
     private $ficheFrais;
 
+    public function __construct()
+    {
+        $this->username = $this->firstName.$this->lastName;
+    }
 
     /**
      * Get id
