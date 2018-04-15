@@ -2,6 +2,7 @@
 namespace FraisBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * ForfaitHorsFrais
  *
@@ -57,8 +58,10 @@ class ForfaitHorsFrais
     private $comment;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
      *
-     * @ORM\Column(nullable=true)
+     * @Assert\NotBlank(message="Choisissez un format pdf, docx, jpg, ou png.")
+     * @Assert\File(mimeTypes={ "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/jpeg", "image/png" })
      */
     private $pieceJointe;
 
@@ -184,7 +187,7 @@ class ForfaitHorsFrais
     {
         return $this->pieceJointe;
     }
-    public function setPieceJointe(UploadedFile $pieceJointe)
+    public function setPieceJointe($pieceJointe)
     {
         $this->pieceJointe = $pieceJointe;
         // On vérifie si on avait déjà un fichier pour cette entité
@@ -193,7 +196,6 @@ class ForfaitHorsFrais
           $this->tempFilename = $this->extension;
           // On réinitialise les valeurs des attributs url et alt
           $this->extension=null;*/
-
     }
     /*
      * @ORM\PrePersist()
@@ -229,11 +231,11 @@ class ForfaitHorsFrais
           $this->getUploadRootDir(), // Le répertoire de destination
           $this->wording.'.'.$this->extension   // Le nom du fichier à créer, ici « id.extension »
         );*/
-        $name = $this->getWording()."_".$this->pieceJointe->getClientOriginalName();
+        //$name = $this->getWording()."_".$this->pieceJointe->getClientOriginalName();
         // On déplace le fichier envoyé dans le répertoire de notre choix
-        $this->pieceJointe->move($this->getUploadRootDir(), $name);
+        //$this->pieceJointe->move($this->getUploadRootDir(), $name);
         // On sauvegarde le nom de fichier dans notre attribut $url
-        $this->extension = $name;
+        //$this->extension = $name;
 
 
 

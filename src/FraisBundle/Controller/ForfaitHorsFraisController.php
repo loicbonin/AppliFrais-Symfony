@@ -4,6 +4,7 @@ use FraisBundle\Entity\ForfaitHorsFrais;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use FraisBundle\Entity\FicheFrais;
+use Symfony\Component\HttpFoundation\File\File;
 /**
  * Forfaithorsfrai controller.
  *
@@ -38,7 +39,15 @@ class ForfaitHorsFraisController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $forfaitHorsFrais->upload();
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+            $file = $forfaitHorsFrais->getPieceJointe();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move(
+                $this->getParameter('pieceJointes'),
+                $fileName);
+            $forfaitHorsFrais->setPieceJointe($fileName);
+
+            //$forfaitHorsFrais->upload();
             $forfaitHorsFrais->setFicheFrais($ficheFrais);
             $em->persist($forfaitHorsFrais);
             $em->flush();
@@ -68,12 +77,26 @@ class ForfaitHorsFraisController extends Controller
      */
     public function editAction(Request $request, ForfaitHorsFrais $forfaitHorsFrai)
     {
+        $forfaitHorsFrai->setPieceJointe(
+            new File($this->getParameter('pieceJointes').'/'.$forfaitHorsFrai->getPieceJointe())
+        );
+
+        $actualFile = $forfaitHorsFrai->getPieceJointe();
+
+
         $deleteForm = $this->createDeleteForm($forfaitHorsFrai);
         $editForm = $this->createForm('FraisBundle\Form\ForfaitHorsFraisType', $forfaitHorsFrai);
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid())
         {
-            $forfaitHorsFrai->upload();
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
+            $file = $forfaitHorsFrai->getPieceJointe();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move(
+                $this->getParameter('pieceJointes'),
+                $fileName);
+            $forfaitHorsFrai->setPieceJointe($fileName);
+
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('forfaithorsfrais_edit', array('id' => $forfaitHorsFrai->getId()));
         }
