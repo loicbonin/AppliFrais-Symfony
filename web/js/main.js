@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('.modal').modal();
     $('.collapsible').collapsible();
-
+    $('select').formSelect();
 
     $('.datepicker').datepicker({
         nextMonth: 'Mois suivant',
