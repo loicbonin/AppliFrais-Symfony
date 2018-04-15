@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 
 class ForfaitFraisType extends AbstractType
 {
@@ -15,7 +18,9 @@ class ForfaitFraisType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('quantity')
+        $builder->add('quantity', IntegerType::class, array(
+            'label' => 'quantitée(s)'
+        ))
             /*->add('type', ChoiceType::class, array(
                 'choices' => array(
                     'Repas' => 'repas',
@@ -31,7 +36,14 @@ class ForfaitFraisType extends AbstractType
                 // 'multiple' => true,
                  //'expanded' => true,
             ))
-            ->add('dateDuFrais')
+            ->add('dateDuFrais', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => [
+                    'class' => 'datepicker',
+                ],
+                'format' => 'dd/MM/yyyy',
+                'label' => 'date du frais'))
             //->add('created')
             //->add('derniereEdition')
             //->add('ficheFrais')

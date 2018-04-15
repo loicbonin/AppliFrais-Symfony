@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
 
 
 
@@ -32,6 +34,7 @@ class ForfaitHorsFraisType extends AbstractType
                 'label' => 'date du frais'))
             ->add('pieceJointe', FileType::class, array('required'   => false, 'label' => 'pièce jointe'))
         ;
+        //$builder->add('save', SubmitType::class);
     }
     
     /**
