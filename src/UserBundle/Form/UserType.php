@@ -38,11 +38,11 @@ class UserType extends AbstractType
             ->add('roles', ChoiceType::class, array(
                 'choices'   => array(
                     'Administrateur'   => 'ROLE_ADMIN',
-                    'Comptable'      => 'ROLE_C',
-                    'Visiteur'      => 'ROLE_V',
+                    'Comptable'      => 'ROLE_COMPTABLE',
+                    'Visiteur'      => 'ROLE_VISITEUR',
                 ),
                 'multiple'  => true,
-                'expanded' => true,
+                'expanded' => false,
             ))
         ;
     }
