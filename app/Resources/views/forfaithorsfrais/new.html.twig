@@ -8,10 +8,10 @@
                         <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
                     {% endif %}                    <ul id="nav-mobile" class="right hide-on-med-and-down">
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                        <li><a href="{{ path('user_show', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
-                        <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
+                            <li><a href="{{ path('user_edit', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
                         {% else %}
-                        <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                            <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
                         {% endif %}
                     </ul>
                 </div>

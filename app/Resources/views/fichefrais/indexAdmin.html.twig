@@ -2,10 +2,46 @@
 
 {% block body %}
     <div style="margin: 25px;" class="grey-text">
-        <i class="material-icons left grey-text">sync</i>Fiche Frais du mois
+        <i class="material-icons left grey-text">people</i>Utilisateurs
         <div class="divider"></div>
     </div>
     <ul class="collapsible popout" data-collapsible="accordion">
+
+            {% for user in users %}
+        <li>
+                <div class="collapsible-header">
+                    <i class="material-icons blue-text text-darken-4">person</i>
+                    {{ user.firstName }} {{ user.lastName }}
+                </div>
+            <div class="collapsible-body">
+                <table class="bordered highlight">
+                    <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Fiches</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.firstName }}</td>
+                            <td>{{ user.lastName }}</td>
+                            <td>
+                                <a class="btn blue darken-4" href="{{ path('fiche_par_user', { 'id': user.id }) }}">Voir les fiches</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </li>
+            {% endfor %}
+
+    </ul>
+
+    {#<ul class="collapsible popout" data-collapsible="accordion">
             <li>
                 {% for onefichefrais in thisMonthfichefrais %}
 
@@ -63,6 +99,7 @@
                 {% endfor %}
             </li>
     </ul>
+
     <div style="margin: 25px;" class="grey-text">
         <i class="material-icons left grey-text">archive</i>toutes les fiches frais
         <div class="divider"></div>
@@ -120,7 +157,7 @@
         {% endfor %}
     </ul>
 
-    <ul>
+
         {#<li>
             <a href="{{ path('fichefrais_new') }}">Create a new ficheFrai</a>
         </li>
@@ -131,5 +168,5 @@
             <a href="{{ path('forfaithorsfrais_new', { 'ficheFraisId': lastfichefrais.0.id }) }}" class="btn">Ajouter une note Hors Frais</a>
         </li>#}
 
-    </ul>
+
 {% endblock %}

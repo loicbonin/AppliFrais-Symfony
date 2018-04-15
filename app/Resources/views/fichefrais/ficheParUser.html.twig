@@ -1,0 +1,64 @@
+{% extends 'baseAdmin.html.twig' %}
+
+{% block body %}
+    <div style="margin: 25px;" class="grey-text">
+        <i class="material-icons left grey-text">archive</i>Fiche Frais par utilisateur
+        <div class="divider"></div>
+    </div>
+
+    <ul class="collapsible popout" data-collapsible="accordion">
+        {% for ficheFrai in allFicheFrais %}
+            <li>
+                <div class="collapsible-header">
+                    <i class="material-icons blue-text text-darken-4">note</i>
+                    {{ ficheFrai.monthyear }}
+                </div>
+                <div class="collapsible-body">
+
+                    <table class="bordered highlight">
+                        <thead>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Prix</th>
+                            <th>Date</th>
+                            <th>Commentaire</th>
+                            <th>Pièce jointe</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if ficheFrai.horsFrais is defined %}
+                            {% for HorsFrai in ficheFrai.horsFrais %}
+                                <tr>
+                                    <td>{{ HorsFrai.wording }}</td>
+                                    <td>{{ HorsFrai.price }}</td>
+                                    <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ HorsFrai.comment }}</td>
+                                    <td>{{ HorsFrai.pieceJointe }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        {% if ficheFrai.frais is defined %}
+                            {% for Frai in ficheFrai.frais %}
+                                <tr>
+                                    <td>{{ Frai.type }}</td>
+                                    <td>{{ Frai.quantity }}</td>
+                                    <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                    <div>
+                        <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div style="margin: 30px 0px;">
+        <a class="waves-effect waves-light btn blue darken-4" href="{{ path('index_admin') }}">Retour à l'accueil</a>
+    </div>
+{% endblock %}

@@ -14,8 +14,10 @@
     {% block nav %}
         <nav class="blue darken-4">
             <div class="nav-wrapper">
-                {% if is_granted("ROLE_ADMIN") %}
+                {% if is_granted("ROLE_COMPTABLE") %}
                     <a href="{{ path('index_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+                {% elseif is_granted("ROLE_ADMIN") %}
+                    <a href="{{ path('index_super_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
                 {% else %}
                     <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
                 {% endif %}
