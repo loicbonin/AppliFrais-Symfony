@@ -22,7 +22,7 @@ $(document).ready(function(){
     });
 });
 
-(function($) {
+/*(function($) {
     window.materializeForm.initDate = function() {
         $('input.date').datepicker({
             selectMonths: true, // Creates a dropdown to control month
@@ -60,7 +60,7 @@ $('.datepicker').datepicker({
     cancel: 'fermer',
     format: 'dd/mm/yyyy',
     firstDay: 1
-});
+});*/
 
 /*
 var instance = M.FeatureDiscovery.getInstance(elem);
