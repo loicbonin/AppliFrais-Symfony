@@ -17,6 +17,18 @@ class FicheFraisRepository extends EntityRepository
 
 
         $iduser = $user->getId();
+        if(date('d') > 10){
+            $request = $this
+                ->createQueryBuilder('e')
+                ->andWhere('e.user ='. $iduser)
+                ->andWhere('e.monthyear <>\''. date('M - Y', strtotime('+1 month')).'\'')
+                //->orderBy('e.created', 'DESC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+        else
+        {
         $request = $this
             ->createQueryBuilder('e')
             ->andWhere('e.user ='. $iduser)
@@ -25,6 +37,7 @@ class FicheFraisRepository extends EntityRepository
             ->getQuery()
             ->getResult()
             ;
+        }
         return $request;
     }
 

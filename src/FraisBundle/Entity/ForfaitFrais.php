@@ -265,6 +265,20 @@ class ForfaitFrais
     }
 
     /**
+     * Set forfait
+     *
+     * @param \FraisBundle\Entity\Forfait $forfait
+     *
+     * @return Forfait
+     */
+    public function setForfait(\FraisBundle\Entity\Forfait $forfait = null)
+    {
+        $this->forfait = $forfait;
+
+        return $this;
+    }
+
+    /**
      * Remove forfait
      *
      * @param \FraisBundle\Entity\Forfait $forfait

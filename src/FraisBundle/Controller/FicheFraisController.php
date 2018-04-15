@@ -47,10 +47,17 @@ class FicheFraisController extends Controller
             foreach($lastfichefrais as $onefichefrais)
             {
                 $monthyear = $onefichefrais->getMonthyear();
-                if (date('M - Y') != $monthyear)
+                if (date('M - Y') != $monthyear && date('d') < 11)
                 {
                     $onefichefrais = new FicheFrais();
                     $onefichefrais->setMonthyear(date('M - Y'));
+                    $onefichefrais->setUser($user);
+                    $em->persist($onefichefrais);
+                    $em->flush();
+                }
+                if (date('M - Y', strtotime('+1 month')) != $monthyear && date('d') > 10){
+                    $onefichefrais = new FicheFrais();
+                    $onefichefrais->setMonthyear(date('M - Y', strtotime('+1 month')));
                     $onefichefrais->setUser($user);
                     $em->persist($onefichefrais);
                     $em->flush();
