@@ -93,8 +93,17 @@ class FicheFraisController extends Controller
      */
     public function indexAdminAction(Request $request)
     {
+
+        $query = $this->getDoctrine()->getEntityManager()
+            ->createQuery(
+                'SELECT u FROM UserBundle:User u WHERE u.roles LIKE :role'
+            )->setParameter('role', '%"ROLE_VISITEUR"%');
+
+        $users = $query->getResult();
+        dump($users);
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
+        //$listUser = $em->getRepository('UserBundle:User')->getUserByRole();
         //$ficheFrais = $em->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
         //$allexceptlast = $em->getRepository('FraisBundle:FicheFrais')->AllExceptLast($user);
         //$forfaitHorsFrais = $em->getRepository('FraisBundle:ForfaitHorsFrais')->findAll();
@@ -115,6 +124,29 @@ class FicheFraisController extends Controller
             'allFicheFrais' => $allFicheFrais,
             'thisMonthfichefrais' => $thisMonthfichefrais,
             'user' => $user,
+            'users' => $users,
+        ));
+    }
+
+    /**
+     * @Security("has_role('ROLE_COMPTABLE', 'ROLE_SUPER_ADMIN')")
+     *
+     */
+    public function ficheParUserAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $visiteurId = $request->attributes->get('id');
+        $visiteur = $em->getRepository('UserBundle:User')->find($visiteurId);
+        $user = $this->getUser();
+
+        $listFicheFrais = $em->getRepository('FraisBundle:FicheFrais')->getFraisByDate($visiteur);
+        /*return $this->redirectToRoute('admin_index', array(
+            'ficheFraisId' => $ficheFrais->getId()));*/
+
+        return $this->render('fichefrais/ficheParUser.html.twig', array(
+            'allFicheFrais' => $listFicheFrais,
+            'user' => $user,
+            'visiteur' => $visiteur,
         ));
     }
 
