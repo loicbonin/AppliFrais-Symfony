@@ -6,6 +6,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+
 
 class ForfaitFraisComptableType extends AbstractType
 {
@@ -14,17 +18,15 @@ class ForfaitFraisComptableType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('quantity')
-            ->add('Type', ChoiceType::class, array(
-                'choices' => array(
-                    'Repas' => 'repas',
-                    'Nuitée' => 'nuitee',
-                    'Repas + Nuitée' => 'frais + transport',
-                    'frais transport' => 'frais transport',
-                ),
+        $builder
+            ->add('comment', TextType::class, array('label' => 'Commentaire', 'required' => false))
+            ->add('etat', EntityType::class, array(
+                // query choices from this entity
+                'class' => 'FraisBundle:Etat',
+                'choice_label' => 'wording',
+                // 'multiple' => true,
+                //'expanded' => true,
             ))
-            ->add('dateDuFrais')
-            ->add('etat')
             //->add('created')
             //->add('derniereEdition')
             //->add('ficheFrais')

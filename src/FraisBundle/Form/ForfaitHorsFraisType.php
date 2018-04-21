@@ -22,7 +22,7 @@ class ForfaitHorsFraisType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('wording', TextType::class, array('label' => 'libellé'))
+            ->add('wording', TextType::class, array('label' => 'libellé' ))
             ->add('price', TextType::class, array('label' => 'prix'))
             ->add('dateDuFrais', DateType::class, array(
                 'widget' => 'single_text',
@@ -32,7 +32,7 @@ class ForfaitHorsFraisType extends AbstractType
                 ],
                 'format' => 'dd/MM/yyyy',
                 'label' => 'date du frais'))
-            ->add('pieceJointe', FileType::class, array('required'   => false, 'label' => 'pièce jointe'))
+            ->add('pieceJointe', FileType::class, array('required'   => false, 'label' => 'pièce jointe',))
         ;
         //$builder->add('save', SubmitType::class);
     }
