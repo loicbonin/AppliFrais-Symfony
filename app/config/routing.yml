@@ -46,11 +46,11 @@ fos_user_change_password:
 #    type:     rest
 #    resource: UserBundle\Controller\UserController
 
-#fichesFrais:
-#    type:     rest
-#    resource: FraisBundle\Controller\FicheFraisController
+fichesFrais:
+    type:     rest
+    resource: FraisBundle\Controller\FicheFraisController
 
-#auth-tokens:
-#    type:     rest
-#    resource: UserBundle\Controller\AuthTokenController
+auth-tokens:
+    type:     rest
+    resource: UserBundle\Controller\AuthTokenController
 
