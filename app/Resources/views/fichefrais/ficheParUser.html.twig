@@ -36,8 +36,8 @@
                                 <th>Date</th>
                                 <th>Commentaire</th>
                                 <th>Pièce jointe</th>
-                                <th>état</th>
-                                <th>action</th>
+                                <th>État</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -64,7 +64,14 @@
                                                 Pas encore traité
                                             {% endif %}
                                         </td>
-                                        <td><a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id}) }}">Validation</a></td>
+                                        <td>{% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
+                                                <i class="material-icons left">not_interested</i>
+                                            {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
+                                                <i class="material-icons left">not_interested</i>
+                                            {% else %}
+                                            <a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id}) }}">Validation</a>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
