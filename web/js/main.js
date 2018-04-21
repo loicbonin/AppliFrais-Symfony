@@ -20,7 +20,16 @@ $(document).ready(function(){
         format: 'dd/mm/yyyy',
         firstDay: 1
     });
+
 });
+
+function toasteur() {
+    M.toast({html: 'le frais a bien été supprimé !'});
+}
+if(document.getElementById("suppression") !== null)
+{
+    toasteur();
+}
 
 /*(function($) {
     window.materializeForm.initDate = function() {
@@ -69,3 +78,4 @@ $(document).ready(function(){
 $('.tap-target').featureDiscovery();
 });
 */
+
