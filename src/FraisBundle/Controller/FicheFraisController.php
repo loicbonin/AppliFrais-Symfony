@@ -100,7 +100,6 @@ class FicheFraisController extends Controller
             )->setParameter('role', '%"ROLE_VISITEUR"%');
 
         $users = $query->getResult();
-        dump($users);
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         //$listUser = $em->getRepository('UserBundle:User')->getUserByRole();
@@ -135,7 +134,7 @@ class FicheFraisController extends Controller
     public function ficheParUserAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $visiteurId = $request->attributes->get('id');
+        $visiteurId = $request->get('id');
         $visiteur = $em->getRepository('UserBundle:User')->find($visiteurId);
         $user = $this->getUser();
 
@@ -337,8 +336,8 @@ class FicheFraisController extends Controller
             return new JsonResponse(['message' => 'fiche frais non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        return $ficheFrais;
-        /*$formatted = [
+        //return $ficheFrais;
+        $formatted = [
             'id' => $ficheFrais->getId(),
             'title' => $ficheFrais->getTitle(),
             'monthYear' => $ficheFrais->getMonthyear(),
@@ -348,7 +347,7 @@ class FicheFraisController extends Controller
             //'address' => $ficheFrais->getAddress(),
         ];
 
-        return new JsonResponse($formatted);*/
+        return new JsonResponse($formatted);
     }
 
     /**
@@ -358,19 +357,62 @@ class FicheFraisController extends Controller
      */
     public function getFichesFraisAction(Request $request)
     {
-        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $_GET['id'];
+        $tokenValue = $_GET['token'];
+
+        $user = $em->getRepository('UserBundle:User')->find($userId);
+        $token = $em->getRepository('UserBundle:AuthToken')->findOneByValue($tokenValue);
+
+        $date = $token->getCreatedAt();
+        $dateNow = date("Y-m-d H:i:s");
+        $datetime1 = strtotime($date->format('Y-m-d H:i:s'));
+        $datetime2 = strtotime($dateNow);
+
+        $secs = $datetime2 - $datetime1;// == <seconds between the two times>
+        $mins = $secs / 60;
+
+        if($mins > 15){
+            $formatted = [];
+            $formatted[] = [
+                'AUTH_STATUS' => "False",
+            ];
+            return new JsonResponse($formatted);
+        }
+
         $fiches = $this->get('doctrine.orm.entity_manager')->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
         /* @var $fiches FicheFrais[] */
+        $prixDesHorsForfait = 0;
+        $prixDesFrais = 0;
 
-        /*$formatted = [];
+        $formatted = [];
         foreach ($fiches as $fiche) {
+            $fraisHorsForfait = $fiche->getFrais();
+            $fraisForfait = $fiche->getHorsFrais();
+
+            foreach ($fraisHorsForfait as $fhf){
+                $prixfhf = $fhf->getPrice();
+                $prixDesHorsForfait = $prixDesHorsForfait + $prixfhf;
+            }
+            foreach ($fraisForfait as $ff){
+                $quantite = $ff->getQuantity();
+                $prixfraisforfait = $ff->getForfait()->getUnitPrice();
+                $prixFinal = $quantite*$prixfraisforfait;
+                $prixDesFrais = $prixDesFrais + $prixFinal;
+            }
+            $prixDeLaFiche = $prixDesFrais + $prixDesHorsForfait;
+
             $formatted[] = [
+                'AUTH_STATUS' => "True",
                 'id' => $fiche->getId(),
-                'title' => $fiche->getTitle(),
+                'etat' => $fiche->getEtat(),
                 'monthYear' => $fiche->getMonthyear(),
+                'price' => $prixDeLaFiche,
             ];
-        }*/
-        //return new JsonResponse($formatted);
+        }
+        return new JsonResponse($formatted);
+
         // Récupération du view handler
         /*$viewHandler = $this->get('fos_rest.view_handler');
         // Création d'une vue FOSRestBundle
@@ -384,7 +426,16 @@ class FicheFraisController extends Controller
 
         return $view;*/
 
-        return $fiches;
+        //return $fiches;
     }
 
+    public function androidAppAction()
+    {
+        return $this->render('androidapp.html.twig');
+    }
+
+    public function choixEtat()
+    {
+        return $this->render('androidapp.html.twig');
+    }
 }

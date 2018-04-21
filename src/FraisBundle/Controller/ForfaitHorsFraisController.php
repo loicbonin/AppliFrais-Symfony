@@ -140,8 +140,13 @@ class ForfaitHorsFraisController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($forfaitHorsFrai);
             $em->flush();
+            $this->addFlash(
+                'notice',
+                'Le frais à bien été supprimé!'
+            );
+            return $this->redirectToRoute('fichefrais_index');
         }
-        return $this->redirectToRoute('forfaithorsfrais_index');
+        return $this->redirectToRoute('fichefrais_index');
     }
     /**
      * Creates a form to delete a forfaitHorsFrai entity.

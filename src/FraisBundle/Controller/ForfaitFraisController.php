@@ -133,6 +133,7 @@ class ForfaitFraisController extends Controller
      */
     public function deleteAction(Request $request, ForfaitFrais $forfaitFrai)
     {
+        $messagedelete = "Le frais à bien été supprimé";
         $form = $this->createDeleteForm($forfaitFrai);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
@@ -140,7 +141,13 @@ class ForfaitFraisController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($forfaitFrai);
             $em->flush();
+            $this->addFlash(
+                'notice',
+                'Le frais à bien été supprimé!'
+            );
+            return $this->redirectToRoute('fichefrais_index');
+
         }
-        return $this->redirectToRoute('forfaitfrais_index');
+        return $this->redirectToRoute('fichefrais_index');
     }
 }
