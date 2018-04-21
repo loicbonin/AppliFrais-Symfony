@@ -139,6 +139,11 @@ class FicheFraisController extends Controller
             $NbFrais = $fiche->getNbFrais();
             if($NbFraisValide == $NbFrais){
                $listSuivieValide[] = $fiche->getId();
+               if($fiche->getPayement() != "Remboursé" or $fiche->getPayement() != "En cours de payement" ) {
+                   $fiche->setDerniereEdition(new \DateTime());
+                   $em->persist($fiche);
+                   $em->flush();
+               }
             }
         }
 
@@ -284,8 +289,12 @@ class FicheFraisController extends Controller
      * Download a pdf.
      *
      */
-    public function pdfAction(Request $request, FicheFrais $ficheFrais)
+    public function pdfAction(Request $request)
     {
+        $ficheFrais = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('FraisBundle:FicheFrais')
+            ->find($request->get('id'));
+
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
         $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
@@ -442,6 +451,7 @@ class FicheFraisController extends Controller
         $ficheId = $request->get('fiche');
         $fiche = $em->getRepository('FraisBundle:FicheFrais')->find($ficheId);
         $fiche->setPayement("En cours de payement");
+        $fiche->setDerniereEdition(new \DateTime());
         $em->persist($fiche);
         $em->flush();
 

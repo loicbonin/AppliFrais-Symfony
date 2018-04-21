@@ -78,14 +78,14 @@ class FicheFrais
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="FraisBundle\Entity\ForfaitHorsFrais", mappedBy="ficheFrais", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FraisBundle\Entity\ForfaitHorsFrais", mappedBy="ficheFrais", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=true)
      *
      */
     private $horsFrais;
 
     /**
-     * @ORM\OneToMany(targetEntity="FraisBundle\Entity\ForfaitFrais", mappedBy="ficheFrais", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="FraisBundle\Entity\ForfaitFrais", mappedBy="ficheFrais", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=true)
      *
      */
