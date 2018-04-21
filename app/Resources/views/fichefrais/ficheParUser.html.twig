@@ -7,110 +7,138 @@
     </div>
 
     <ul class="collapsible popout" data-collapsible="accordion">
-        {% for ficheFrai in allFicheFrais %}
-            {% if ficheFrai.horsFrais is not empty or ficheFrai.frais is not empty %}
-                <li>
-                    <div class="collapsible-header">
-                        <i class="material-icons blue-text text-darken-4">note</i>
-                        {{ ficheFrai.monthyear }}
-                    </div>
-                    <div class="collapsible-body">
-
-                            {% for v in listSuivieValide %}
-                                {% if v == ficheFrai.id %}
-                                    {% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
-                                        <p>La fiche est déjà remboursé.</p>
-                                    {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
-                                        <p>La fiche est en cours de payement.</p>
-                                    {%  else %}
-                                        <p>Tout les frais sont validés ! Voulez vous mettre en payement ?</p> <a href="{{ path('mise_en_payement', {'id': visiteur.id, 'fiche':ficheFrai.id}) }}">Mettre en payement</a>
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-
-                        <table class="bordered highlight">
-                            <thead>
+        {% if allFicheFrais is not empty %}
+            {% for ficheFrai in allFicheFrais %}
+                {% if ficheFrai.horsFrais is not empty or ficheFrai.frais is not empty %}
+                    <li>
+                        <div class="collapsible-header">
+                            <i class="material-icons blue-text text-darken-4">note</i>
+                            {{ ficheFrai.monthyear }}
                             <tr>
-                                <th>Intitulé</th>
-                                <th>Prix</th>
-                                <th>Date</th>
-                                <th>Commentaire</th>
-                                <th>Pièce jointe</th>
-                                <th>État</th>
-                                <th>Action</th>
+                                <th>|  état: </th>
+                                <td>
+                                    {% if ficheFrai.payement %}
+                                        {{ ficheFrai.payement }}
+                                    {% else %}
+                                        À traiter
+                                    {% endif %}
+                                </td>
+                                <th>|  Montant total: </th>
+                                <td>
+                                    {% set totalFrai = 0 %}
+                                    {% set totalHorsFrai = 0 %}
+                                    {% set totalFicheFrai = 0 %}
+                                    {% for Frai in ficheFrai.frais %}
+                                        {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                                    {% endfor %}
+                                    {% for HorsFrai in ficheFrai.horsFrais %}
+                                        {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                                    {% endfor %}
+                                    {% set totalFicheFrai = totalHorsFrai + totalFrai %}
+                                    {{ totalFicheFrai }}€
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {% if ficheFrai.horsFrais is defined %}
-                                {% for HorsFrai in ficheFrai.horsFrais %}
-                                    <tr>
-                                        <td>{{ HorsFrai.wording }}</td>
-                                        <td>{{ HorsFrai.price }} €</td>
-                                        <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                        <td>
-                                            {% if HorsFrai.comment %}
-                                                {{ HorsFrai.comment }}
-                                            {% else %}
-                                                Pas de commentaire
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a>
-                                        </td>
-                                        <td>
-                                            {% if HorsFrai.etat is not null %}
-                                                {{ HorsFrai.etat.wording }}
-                                            {% else %}
-                                                Pas encore traité
-                                            {% endif %}
-                                        </td>
-                                        <td>{% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
-                                                <i class="material-icons left">not_interested</i>
-                                            {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
-                                                <i class="material-icons left">not_interested</i>
-                                            {% else %}
-                                            <a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id}) }}">Validation</a>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                            {% if ficheFrai.frais is defined %}
-                                {% for Frai in ficheFrai.frais %}
-                                    <tr>
-                                        <td>{{ Frai.forfait.wording }}</td>
-                                        <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
-                                        <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                        <td>
-                                            {% if Frai.comment %}
-                                                {{ Frai.comment }}
-                                            {% else %}
-                                                Pas de commentaire
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            Pas de pièce jointe
-                                        </td>
-                                        <td>
-                                            {% if Frai.etat is not null %}
-                                                {{ Frai.etat.wording }}
-                                            {% else %}
-                                                Pas encore traité
-                                            {% endif %}
-                                        </td>
-                                        <td><a href="{{ path('forfaitfrais_edit_comptable', {'id': Frai.id}) }}">Validation</a></td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                            </tbody>
-                        </table>
-                        <div>
-                            <a href="{{ path('fichefrais_pdf', { 'id': ficheFrai.id, 'name': attribute(ficheFrai, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
                         </div>
-                    </div>
-                </li>
-            {% endif %}
-        {% endfor %}
+                        <div class="collapsible-body">
+
+                                {% for v in listSuivieValide %}
+                                    {% if v == ficheFrai.id %}
+                                        {% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
+                                            <p>La fiche est déjà remboursé.</p>
+                                        {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
+                                            <p>La fiche est en cours de payement.</p>
+                                        {%  else %}
+                                            <p>Tout les frais sont validés ! Voulez vous mettre en payement ?</p> <a href="{{ path('mise_en_payement', {'id': visiteur.id, 'fiche':ficheFrai.id}) }}">Mettre en payement</a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            <table class="bordered highlight">
+                                <thead>
+                                <tr>
+                                    <th>Intitulé</th>
+                                    <th>Prix</th>
+                                    <th>Date</th>
+                                    <th>Commentaire</th>
+                                    <th>Pièce jointe</th>
+                                    <th>État</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if ficheFrai.horsFrais is defined %}
+                                    {% for HorsFrai in ficheFrai.horsFrais %}
+                                        <tr>
+                                            <td>{{ HorsFrai.wording }}</td>
+                                            <td>{{ HorsFrai.price }} €</td>
+                                            <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                            <td>
+                                                {% if HorsFrai.comment %}
+                                                    {{ HorsFrai.comment }}
+                                                {% else %}
+                                                    Pas de commentaire
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a>
+                                            </td>
+                                            <td>
+                                                {% if HorsFrai.etat is not null %}
+                                                    {{ HorsFrai.etat.wording }}
+                                                {% else %}
+                                                    Pas encore traité
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
+                                                    <i class="material-icons left">not_interested</i>
+                                                {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
+                                                    <i class="material-icons left">not_interested</i>
+                                                {% else %}
+                                                <a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id}) }}">Validation</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if ficheFrai.frais is defined %}
+                                    {% for Frai in ficheFrai.frais %}
+                                        <tr>
+                                            <td>{{ Frai.forfait.wording }}</td>
+                                            <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
+                                            <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                            <td>
+                                                {% if Frai.comment %}
+                                                    {{ Frai.comment }}
+                                                {% else %}
+                                                    Pas de commentaire
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                Pas de pièce jointe
+                                            </td>
+                                            <td>
+                                                {% if Frai.etat is not null %}
+                                                    {{ Frai.etat.wording }}
+                                                {% else %}
+                                                    Pas encore traité
+                                                {% endif %}
+                                            </td>
+                                            <td><a href="{{ path('forfaitfrais_edit_comptable', {'id': Frai.id}) }}">Validation</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                            <div>
+                                <a href="{{ path('fichefrais_pdf', { 'id': ficheFrai.id, 'name': attribute(ficheFrai, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>Pas de fiche de frais pour ce visiteur</p>
+        {% endif %}
 
     </ul>
 
