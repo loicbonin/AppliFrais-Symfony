@@ -32,10 +32,11 @@ class ForfaitFraisController extends Controller
      */
     public function newAction(Request $request)
     {
-        
+        $em = $this->getDoctrine()->getManager();
+        $etat = $em->getRepository('FraisBundle:Etat')->find(1);
         $user = $this->getUser();
         $ficheFraisId = $request->attributes->get('ficheFraisId');
-        $em = $this->getDoctrine()->getManager();
+
         $ficheFrais = $em->getRepository('FraisBundle:FicheFrais')->find($ficheFraisId);
         $forfaitFrai = new Forfaitfrais();
         $form = $this->createForm('FraisBundle\Form\ForfaitFraisType', $forfaitFrai);
@@ -43,6 +44,7 @@ class ForfaitFraisController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //$forfaitFrai->upload();
             $forfaitFrai->setFicheFrais($ficheFrais);
+            $forfaitFrai->setEtat($etat);
             $em->persist($forfaitFrai);
             $em->flush();
             return $this->redirectToRoute('fichefrais_index');

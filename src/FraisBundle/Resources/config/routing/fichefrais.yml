@@ -8,6 +8,11 @@ index_admin:
     defaults: { _controller: "FraisBundle:FicheFrais:indexAdmin" }
     methods:  GET
 
+mise_en_payement:
+    path:     /miseenpayement
+    defaults: { _controller: "FraisBundle:FicheFrais:miseEnPayement" }
+    methods:  POST
+
 android_app:
     path:    /androidapp
     defaults: { _controller: "FraisBundle:FicheFrais:androidApp" }

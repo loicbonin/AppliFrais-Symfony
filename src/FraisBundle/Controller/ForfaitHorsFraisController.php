@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use FraisBundle\Entity\FicheFrais;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Forfaithorsfrai controller.
  *
@@ -33,6 +34,8 @@ class ForfaitHorsFraisController extends Controller
         $user = $this->getUser();
         $ficheFraisId = $request->attributes->get('ficheFraisId');
         $em = $this->getDoctrine()->getManager();
+        $etat = $em->getRepository('FraisBundle:Etat')->find(1);
+
         $ficheFrais = $em->getRepository('FraisBundle:FicheFrais')->find($ficheFraisId);
         $forfaitHorsFrais = new Forfaithorsfrais();
         $form = $this->createForm('FraisBundle\Form\ForfaitHorsFraisType', $forfaitHorsFrais);
@@ -49,6 +52,7 @@ class ForfaitHorsFraisController extends Controller
 
             //$forfaitHorsFrais->upload();
             $forfaitHorsFrais->setFicheFrais($ficheFrais);
+            $forfaitHorsFrais->setEtat($etat);
             $em->persist($forfaitHorsFrais);
             $em->flush();
             return $this->redirectToRoute('fichefrais_index');
@@ -113,17 +117,33 @@ class ForfaitHorsFraisController extends Controller
      */
     public function editComptableAction(Request $request, ForfaitHorsFrais $forfaitHorsFrais)
     {
+        //$deleteForm = $this->createDeleteForm($forfaitHorsFrais);
+
+        $actualFile = $forfaitHorsFrais->getPieceJointe();
+        $forfaitHorsFrais->setPieceJointe(
+            new File($this->getParameter('pieceJointes').'/'.$forfaitHorsFrais->getPieceJointe())
+        );
+
         $form = $this->createForm('FraisBundle\Form\ForfaitHorsFraisComptableType', $forfaitHorsFrais);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
+
+            $forfaitHorsFrais->setPieceJointe($actualFile);
+
+            $this->getDoctrine()->getManager()->flush();
+            if($forfaitHorsFrais->getEtat()->getWording() == 'invalidée'){
+                $forfaitHorsFrais->setWording("REFUSÉ: ".$forfaitHorsFrais->getWording());
+            }
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('forfaithorsfrais_edit_comptable', array('id' => $forfaitHorsFrais->getId()));
         }
 
         return $this->render('forfaithorsfrais/etatEdit.html.twig', array(
             'forfaitHorsFrais' => $forfaitHorsFrais,
+            'pj' => $actualFile,
             'form' => $form->createView(),
+            //'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -133,6 +153,7 @@ class ForfaitHorsFraisController extends Controller
      */
     public function deleteAction(Request $request, ForfaitHorsFrais $forfaitHorsFrai)
     {
+
         $form = $this->createDeleteForm($forfaitHorsFrai);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())

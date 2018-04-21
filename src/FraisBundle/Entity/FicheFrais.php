@@ -54,6 +54,13 @@ class FicheFrais
      */
     private $comment;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="payement", type="string", nullable=true)
+     */
+    private $payement;
+
     // LIAISON ENTITEES
 
     /**
@@ -123,6 +130,27 @@ class FicheFrais
     public function getUrl()
     {
         return $this->url;
+    }
+    /**
+     * Set payement
+     *
+     * @param string $payement
+     *
+     * @return FicheFrais
+     */
+    public function setPayement($payement)
+    {
+        $this->payement = $payement;
+        return $this;
+    }
+    /**
+     * Get payement
+     *
+     * @return string
+     */
+    public function getPayement()
+    {
+        return $this->payement;
     }
     /**
      * Set title
@@ -229,6 +257,9 @@ class FicheFrais
     {
         return $this->comment;
     }
+
+
+
 
     /**
      * Set User
@@ -344,5 +375,56 @@ class FicheFrais
     public function getEtat()
     {
         return $this->etat;
+    }
+
+    /**
+     * Get nbFraisValide
+     *
+     * @return int
+     */
+    public function getNbFraisValide()
+    {
+        $nbFraisForfaitValide = 0;
+        $nbFraisHorsForfaitValide = 0;
+
+        $listFraisHorsForfait = $this->getHorsFrais();
+        foreach ( $listFraisHorsForfait as $hf){
+            if($hf->getEtat()->getWording() == "validée"){
+                $nbFraisHorsForfaitValide = $nbFraisHorsForfaitValide +1;
+            }
+
+        }
+        $listFraisForfait = $this->getFrais();
+        foreach ($listFraisForfait as $ff){
+            if($ff->getEtat()->getWording() == "validée") {
+                $nbFraisForfaitValide = $nbFraisForfaitValide + 1;
+            }
+        }
+
+        $nbTotalValide = $nbFraisForfaitValide + $nbFraisHorsForfaitValide;
+        return $nbTotalValide;
+    }
+
+    /**
+     * Get nbFrais
+     *
+     * @return int
+     */
+    public function getNbFrais()
+    {
+        $nbFraisForfait = 0;
+        $nbFraisHorsForfait = 0;
+
+        $listFraisHorsForfait = $this->getHorsFrais();
+        foreach ( $listFraisHorsForfait as $hf){
+            $nbFraisHorsForfait = $nbFraisHorsForfait +1;
+        }
+        $listFraisForfait = $this->getFrais();
+        foreach ($listFraisForfait as $ff){
+            $nbFraisForfait = $nbFraisForfait + 1;
+        }
+
+        $nbTotal = $nbFraisForfait + $nbFraisHorsForfait;
+        return $nbTotal;
     }
 }

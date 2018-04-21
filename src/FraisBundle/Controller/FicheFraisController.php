@@ -102,22 +102,13 @@ class FicheFraisController extends Controller
         $users = $query->getResult();
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$listUser = $em->getRepository('UserBundle:User')->getUserByRole();
-        //$ficheFrais = $em->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
-        //$allexceptlast = $em->getRepository('FraisBundle:FicheFrais')->AllExceptLast($user);
-        //$forfaitHorsFrais = $em->getRepository('FraisBundle:ForfaitHorsFrais')->findAll();
-        //$forfaitFrais = $em->getRepository('FraisBundle:ForfaitFrais')->findAll();
         $allFicheFrais = $em->getRepository('FraisBundle:FicheFrais')->findAll();
-        //$allEditFicheFrais = $em->getRepository('FraisBundle:FicheFrais')->findAll();
         $thisMonthfichefrais = $em->getRepository('FraisBundle:FicheFrais')->findByMonthyear(date('M - Y'));
-        /*$lastfichefrais = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('FraisBundle:FicheFrais')
-            ->getLastEntity($user)
-        ;*/
-        /*return $this->redirectToRoute('admin_index', array(
-            'ficheFraisId' => $ficheFrais->getId()));*/
+
+        /*foreach ($allFicheFrais as $fiche){
+            $NbFraisValide = $fiche->getNbFraisValide();
+            $NbFrais = $fiche->getNbFrais();
+        }*/
 
         return $this->render('fichefrais/indexAdmin.html.twig', array(
             'allFicheFrais' => $allFicheFrais,
@@ -137,13 +128,23 @@ class FicheFraisController extends Controller
         $visiteurId = $request->get('id');
         $visiteur = $em->getRepository('UserBundle:User')->find($visiteurId);
         $user = $this->getUser();
+        $listSuivieValide = [];
 
         $listFicheFrais = $em->getRepository('FraisBundle:FicheFrais')->getFraisByDate($visiteur);
         /*return $this->redirectToRoute('admin_index', array(
             'ficheFraisId' => $ficheFrais->getId()));*/
 
+        foreach ($listFicheFrais as $fiche){
+            $NbFraisValide = $fiche->getNbFraisValide();
+            $NbFrais = $fiche->getNbFrais();
+            if($NbFraisValide == $NbFrais){
+               $listSuivieValide[] = $fiche->getId();
+            }
+        }
+
         return $this->render('fichefrais/ficheParUser.html.twig', array(
             'allFicheFrais' => $listFicheFrais,
+            'listSuivieValide' => $listSuivieValide,
             'user' => $user,
             'visiteur' => $visiteur,
         ));
@@ -434,8 +435,16 @@ class FicheFraisController extends Controller
         return $this->render('androidapp.html.twig');
     }
 
-    public function choixEtat()
+    public function miseEnPayementAction(Request $request)
     {
-        return $this->render('androidapp.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $visiteurId = $request->get('id');
+        $ficheId = $request->get('fiche');
+        $fiche = $em->getRepository('FraisBundle:FicheFrais')->find($ficheId);
+        $fiche->setPayement("En cours de payement");
+        $em->persist($fiche);
+        $em->flush();
+
+        return $this->redirectToRoute('fiche_par_user', array('id' => $visiteurId));
     }
 }
