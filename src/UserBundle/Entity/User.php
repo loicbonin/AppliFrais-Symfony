@@ -110,6 +110,7 @@ class User extends BaseUser
 
     public function __construct()
     {
+        parent::__construct();
         $this->username = $this->firstName.$this->lastName;
     }
 

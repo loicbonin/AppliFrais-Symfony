@@ -19,7 +19,8 @@ class UserType extends AbstractType
         $builder
             ->add('firstName')
             ->add('lastName')
-            ->add('oldPassword')
+            ->add('password')
+            ->add('email')
             ->add('job')
             ->add('address')
             ->add('zipCode')
