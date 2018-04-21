@@ -2,7 +2,7 @@
 
 {% block body %}
     <div style="margin: 25px;" class="grey-text">
-        <i class="material-icons left grey-text">archive</i>Fiche Frais par utilisateur
+        <i class="material-icons left grey-text">archive</i>Fiche Frais de <strong>{{ visiteur.firstname }} {{ visiteur.lastname }}</strong>
         <div class="divider"></div>
     </div>
 
@@ -23,6 +23,8 @@
                             <th>Date</th>
                             <th>Commentaire</th>
                             <th>Pièce jointe</th>
+                            <th>état</th>
+                            <th>action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -30,28 +32,60 @@
                             {% for HorsFrai in ficheFrai.horsFrais %}
                                 <tr>
                                     <td>{{ HorsFrai.wording }}</td>
-                                    <td>{{ HorsFrai.price }}</td>
+                                    <td>{{ HorsFrai.price }} €</td>
                                     <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                    <td>{{ HorsFrai.comment }}</td>
-                                    <td>{{ HorsFrai.pieceJointe }}</td>
+                                    <td>
+                                        {% if HorsFrai.comment %}
+                                            {{ HorsFrai.comment }}
+                                        {% else %}
+                                            Pas de commentaire
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a>
+                                    </td>
+                                    <td>
+                                        {% if HorsFrai.etat is not null %}
+                                            {{ HorsFrai.etat.wording }}
+                                        {% else %}
+                                            Pas encore traité
+                                        {% endif %}
+                                    </td>
+                                    <td></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
                         {% if ficheFrai.frais is defined %}
                             {% for Frai in ficheFrai.frais %}
                                 <tr>
-                                    <td>{{ Frai.type }}</td>
-                                    <td>{{ Frai.quantity }}</td>
+                                    <td>{{ Frai.forfait.wording }}</td>
+                                    <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
                                     <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>
+                                        {% if Frai.comment %}
+                                            {{ Frai.comment }}
+                                        {% else %}
+                                            Pas de commentaire
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        Pas de pièce jointe
+                                    </td>
+                                    <td>
+                                        {% if Frai.etat is not null %}
+                                            {{ Frai.etat.wording }}
+                                        {% else %}
+                                            Pas encore traité
+                                        {% endif %}
+                                    </td>
+                                    <td><a href="{{ path('forfaitfrais_edit_comptable', {'id': Frai.id}) }}">Validation</a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
                         </tbody>
                     </table>
                     <div>
-                        <a class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
+                        <a href="{{ path('fichefrais_pdf', { 'id': ficheFrai.id, 'name': attribute(ficheFrai, 'MonthYear')}) }}" target="_blank" title="Generer pdf" class="waves-effect waves-light btn red darken-2"><i class="material-icons left">picture_as_pdf</i>Generer pdf</a>
                     </div>
                 </div>
             </li>

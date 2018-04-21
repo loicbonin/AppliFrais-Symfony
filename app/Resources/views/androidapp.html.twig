@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block nav %}
+    <nav class="blue darken-4">
+        <div class="nav-wrapper">
+            {% if is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('index_admin') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+            {% else %}
+                <a href="{{ path('fichefrais_index') }}" class="brand-logo"><img class="logo" src="{{ asset('img/logo.png') }}"></a>
+            {% endif %}            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <li><a href="{{ path('android_app') }}"><i class="material-icons left">android</i>Application disponible !</a></li>
+                    <li><a href="{{ path('user_edit', { 'id': app.user.id, 'user': app.user }) }}"><i class="material-icons left">person</i>{{ app.user.username }}</a></li>
+                    <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons left">exit_to_app</i>Déconnexion</a></li>
+                {% else %}
+                    <li><a href="{{ path('fos_user_security_login') }}">Connexion</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+{% block body %}
+
+        <div class="container">
+            <div class="card">
+                <div class="card-image">
+                    <img src="{{ asset('img/android_apps-2.png')}}" alt="" style="width: 300px;height: 300px;margin: auto;
+    padding: 10px;"/>
+                </div>
+                <div class="card-content">
+                    <span class="card-title">L'application Android est disponible !</span>
+                    <p>
+                        L'application mobile est maintenant disponible sur les smartphones Android !
+                        Vous pouvez dès maintenant consulter vos fiches de frais directement sur votre téléphone.
+                    </p>
+                    <br/>
+                    <p>
+                        L'application n'as pas vocation à se retrouver sur le store android, c'est pourquoi elle est disponible en téléchargement ici.
+                        Depuis un ordinateur, vous devez transferer le fichier "applifrais.apk" sur votre téléphone, puis lancer l'installation.
+                    </p>
+                    <br/>
+                    <p>
+                        Les identifiants pour ce connecter sont les mêmes que ceux de l'application web.
+                        Elle est 100% compatible avec le téléphone professionnel fourni par l'entreprise.
+                    </p>
+                </div>
+                <div class="card-action">
+                    <div style="margin: 0 auto;
+    padding: 10px;">
+                        <a class="waves-effect waves-light halfway-fab btn-large" style="" href="{{ asset('img/android_apps-2.png')}}" download><i class="material-icons left">phone_android</i>télécharger</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

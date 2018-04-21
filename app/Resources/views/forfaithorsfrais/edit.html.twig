@@ -36,16 +36,9 @@
                 <label>date du frais</label>
                 {{ form_widget(edit_form.dateDuFrais, {'attr': {'class': 'datepicker'}}) }}
             </div>
-            <div class="col m6 s12" action="#">
-                <div class="file-field input-field">
-                    <div class="btn-flat grey darken-3 white-text">
-                        <span>Ajouter une pièce jointe</span>
-                        <input type="file">
-                    </div>
-                    <div class="file-path-wrapper">
-                        {{ form_widget(edit_form.pieceJointe, {'attr': {'class': 'file-path validate',}}) }}
-                    </div>
-                </div>
+            <div class="col m6 s12" >
+                <label class="required">pièce jointe obligatoire</label>
+                    {{ form_widget(edit_form.pieceJointe, {'attr': {'class': 'file-path validate black-text', 'type': 'file'}}) }}
             </div>
         </div>
         <div style="margin-top: 20px;">

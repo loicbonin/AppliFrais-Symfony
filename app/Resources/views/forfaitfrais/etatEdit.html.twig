@@ -1,16 +1,40 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Etat du forfait frais</h1>
 
+<div style="margin: 25px;">
+    <i class="material-icons left">add</i> Validation de Frais
+    <div class="divider"></div>
+</div>
+
+<div class="card" style="padding: 30px;">
+    <table class="bordered highlight">
+        <thead>
+        <tr>
+            <th>Intitulé</th>
+            <th>Prix</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ forfaitFrais.forfait.wording }}</td>
+                <td>{{ forfaitFrais.quantity * forfaitFrais.forfait.unitPrice }} €</td>
+                <td>{% if forfaitFrais.dateDuFrais %}{{ forfaitFrais.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
     {{ form_start(form) }}
+    <div class="row">
         {{ form_widget(form) }}
-        <input type="submit" value="Edit" />
+    </div>
+    <div style="margin-top: 20px;">
+        <input class="btn green darken-3" type="submit" value="Valider l'édition    " />
+    </div>
     {{ form_end(form) }}
+</div>
+    <div style="margin: 30px 0px;">
+        <a class="waves-effect waves-light btn blue darken-4" href="{{ path('index_admin') }}">Retour à l'accueil</a>
+    </div>
 
-    <ul>
-        <li>
-            <a href="{{ path('fichefrais_index') }}">Retour à la liste</a>
-        </li>
-    </ul>
 {% endblock %}

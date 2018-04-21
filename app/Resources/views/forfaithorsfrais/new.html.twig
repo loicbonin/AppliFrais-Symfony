@@ -27,7 +27,7 @@
 
     <div class="card" style="padding: 30px;">
 
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'action':'#'}}) }}
             <div class="row">
                 <div class="col m9 s12">
                     {{ form_row(form.wording, {'attr': {'class': 'validate', }}) }}
@@ -39,17 +39,9 @@
                     <label class="required">date du frais</label>
                     {{ form_widget(form.dateDuFrais, {'attr': {'class': 'datepicker'}}) }}
                 </div>
-                <div class="col m6 s12" action="#">
+                <div class="col m6 s12">
                     <label class="required">pièce jointe obligatoire</label>
-                        <div class="file-field input-field">
-                            <div class="btn-flat grey darken-3 white-text">
-                                <span>Ajouter une pièce jointe</span>
-                                <input type="file">
-                            </div>
-                            <div class="file-path-wrapper">
-                                {{ form_widget(form.pieceJointe, {'attr': {'class': 'file-path validate',}}) }}
-                            </div>
-                        </div>
+                    {{ form_widget(form.pieceJointe, {'attr': {'class': 'file-path validate black-text', 'type': 'file'}}) }}
                 </div>
             </div>
             {# {{ form_row(form.pieceJointe, {'attr': {'class': 'file-path validate',}}) }} #}

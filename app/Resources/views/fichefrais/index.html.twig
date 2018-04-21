@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    {% if app.session.flashBag.get('notice') is defined %}
+        {% for flash_message in app.session.flashBag.get('notice') %}
+
+            <div id="suppression"></div>
+
+        {% endfor %}
+    {% endif %}
+
+
     <div style="margin: 25px;" class="green-text">
         <i class="material-icons left green-text">sync</i>Fiches frais du mois
         <div class="divider green"></div>
