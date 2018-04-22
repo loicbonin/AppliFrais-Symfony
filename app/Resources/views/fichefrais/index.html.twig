@@ -67,7 +67,7 @@
                     {% for HorsFrai in onefichefrais.horsFrais %}
                         <tr>
                             <td>Hors Forfait</td>
-                            <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ HorsFrai.wording }}</td>
                             <td>{{ HorsFrai.price }} €</td>
                             <td>
@@ -102,7 +102,7 @@
                     {% for Frai in onefichefrais.frais %}
                         <tr>
                             <td>Forfait</td>
-                            <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('d/m/Y') }}{% endif %}</td>
                             <td>{{ Frai.forfait.wording }}</td>
                             <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
                             <td>
@@ -151,8 +151,8 @@
                     <tr>
                         <th>|  état: </th>
                         <td>
-                            {% if onefichefrais.etat %}
-                                {{ onefichefrais.etat }}
+                            {% if ficheFrai.payement is not null %}
+                                {{ ficheFrai.payement }}
                             {% else %}
                                 En traitement
                             {% endif %}
@@ -177,33 +177,60 @@
                     <table class="bordered highlight">
                         <thead>
                             <tr>
-                              <th>Type de Frais</th>
-                              <th>Intitulé</th>
-                              <th>Prix</th>
-                              <th>Date</th>
-                              <th>Commentaire</th> 
-                              <th>Pièce jointe</th>
+                                <th>Type de Frais</th>
+                                <th>Date</th>
+                                <th>Intitulé</th>
+                                <th>Prix</th>
+                                <th>Commentaire</th>
+                                <th>Etat</th>
+                                <th>Pièce jointe</th>
                             </tr>
                         </thead>
                         <tbody>
                           {% for HorsFrai in ficheFrai.horsFrais %}
                               <tr>
                                   <td>Hors Forfait</td>
+                                  <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('d/m/Y') }}{% endif %}</td>
                                   <td>{{ HorsFrai.wording }}</td>
                                   <td>{{ HorsFrai.price }} €</td>
-                                  <td>{% if HorsFrai.dateDuFrais %}{{ HorsFrai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                  <td>{{ HorsFrai.comment }}</td>
+                                  <td>
+                                      {% if HorsFrai.comment %}
+                                          {{ HorsFrai.comment }}
+                                      {% else %}
+                                          Pas de commentaire
+                                      {% endif %}
+                                  </td>
+                                  <td>
+                                      {% if HorsFrai.etat is not null %}
+                                          {{ HorsFrai.etat.wording }}
+                                      {% else %}
+                                          Pas encore traité
+                                      {% endif %}
+                                  </td>
                                   <td><a href="{{ asset('uploads/pieceJointes/' ~ HorsFrai.pieceJointe) }}">Voir la pièce jointe</a></td>
                               </tr>
                           {% endfor %}
                           {% for Frai in ficheFrai.frais %}
                               <tr>
                                   <td>Forfait</td>
+                                  <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('d/m/Y') }}{% endif %}</td>
                                   <td>{{ Frai.type }}</td>
                                   <td>{{ Frai.quantity * Frai.forfait.unitPrice }} €</td>
-                                  <td>{% if Frai.dateDuFrais %}{{ Frai.dateDuFrais|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                  <td></td>
-                                  <td></td>
+                                  <td>
+                                      {% if Frai.comment %}
+                                          {{ Frai.comment }}
+                                      {% else %}
+                                          Pas de commentaire
+                                      {% endif %}
+                                  </td>
+                                  <td>
+                                      {% if Frai.etat is not null %}
+                                          {{ Frai.etat.wording }}
+                                      {% else %}
+                                          Pas encore traité
+                                      {% endif %}
+                                  </td>
+                                  <td>Pas de pièce jointe</td>
                               </tr>
                           {% endfor %}
                         </tbody>
@@ -216,9 +243,7 @@
         {% endfor %}
     </ul>
     <ul>
-        {#<li>
-            <a href="{{ path('fichefrais_new') }}">Create a new ficheFrai</a>
-        </li>
+        {#
         <li>
             <a href="{{ path('forfaitfrais_new', { 'ficheFraisId': lastfichefrais.0.id }) }}" class="btn">Ajouter une note de Frais</a>
         </li>

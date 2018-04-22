@@ -83,10 +83,23 @@ class UserController extends Controller
     public function editAction(Request $request, User $user)
     {
         $deleteForm = $this->createDeleteForm($user);
-        $editForm = $this->createForm('UserBundle\Form\UserType', $user);
+        if($this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
+            $editForm = $this->createForm('UserBundle\Form\UserAdminType', $user);
+        }
+        else{
+            $editForm = $this->createForm('UserBundle\Form\UserType', $user);
+        }
         $editForm->handleRequest($request);
-
+        $actualRoles = $user->getRoles();
+        $actualpassword = $user->getPassword();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $newRoles = $user->getRoles();
+            if(empty($newRoles) && !empty($actualRoles)){
+                $user->setRoles($actualRoles);
+            }
+            $user->setPassword($actualpassword);
+            $this->getDoctrine()->getManager()->persist($user);
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('user_edit', array('id' => $user->getId()));

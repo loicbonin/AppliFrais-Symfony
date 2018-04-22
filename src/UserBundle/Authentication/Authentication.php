@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 
+// ROLE: Redirection selon le role de l'utilisateur à sa connexion
 class Authentication implements AuthenticationSuccessHandlerInterface
 {
 

@@ -120,6 +120,10 @@ class ForfaitFraisController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash(
+                'noticecomptable',
+                'Modification effectuée'
+            );
             return $this->redirectToRoute('forfaitfrais_edit_comptable', array('id' => $forfaitFrais->getId()));
         }
 
@@ -135,7 +139,6 @@ class ForfaitFraisController extends Controller
      */
     public function deleteAction(Request $request, ForfaitFrais $forfaitFrai)
     {
-        $messagedelete = "Le frais à bien été supprimé";
         $form = $this->createDeleteForm($forfaitFrai);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())

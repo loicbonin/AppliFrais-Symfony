@@ -1,8 +1,75 @@
 {% trans_default_domain 'FOSUserBundle' %}
-
-{{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }}
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+   <div style="margin: 25px;">
+        <i class="material-icons left">person</i>Mes informations
+        <div class="divider"></div>
     </div>
-{{ form_end(form) }}
+
+    <div class="card" style="padding: 30px;">
+
+       {{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }}
+        {{ form_widget(form._token) }}
+        <div class="row">
+            <div class="col m6 s12">
+                {{ form_row(form.firstName, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                {{ form_row(form.lastName, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                {{ form_row(form.email, {'attr': {'class': 'validate',}}) }}
+            </div>
+
+            {#<div class="col m6 s12">
+                {{ form_row(form.password, {'attr': {'class': 'validate',}}) }}
+            </div>#}
+
+            <div class="col m6 s12">
+                {{ form_row(form.job, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                {{ form_row(form.address, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                {{ form_row(form.zipCode, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                {{ form_row(form.city, {'attr': {'class': 'validate',}}) }}
+            </div>
+            <div class="col m6 s12">
+                <label>date d'embauche</label>
+                {{ form_widget(form.hiringDate, {'attr': {'class': 'validate datepicker',}}) }}
+            </div>
+            {% if is_granted("ROLE_ADMIN") %}
+                <div class="col m6 s12">
+                    {{ form_row(form.roles, {'attr': {'class': 'dropdown-content select-dropdown multiple-select-dropdown',}}) }}
+                </div>
+            {% endif %}
+        </div>
+        <div style="margin-top: 20px;">
+            <input class="btn green darken-3" type="submit" value="Enregistrer" />
+        </div>
+        {{ form_end(form, {'render_rest': false}) }}
+
+    </div>
+    {% if is_granted("ROLE_ADMIN") %}
+        <div style="margin: 30px 0px;">
+            <a class="btn blue darken-4" href="{{ path('index_super_admin') }}">Retour à la liste des utilisateurs</a>
+        </div>
+    {% elseif is_granted("ROLE_COMPTABLE") %}
+        <div style="margin: 30px 0px;">
+            <a class="btn blue darken-4" href="{{ path('index_super_admin') }}">Retour à la liste des utilisateurs</a>
+        </div>
+    {% else %}
+        <div style="margin: 30px 0px;">
+            <a class="btn blue darken-4" href="{{ path('fichefrais_index') }}">Retour à la liste des fiches de frais</a>
+        </div>
+    {% endif %}
+
+    {#
+    {{ form_start(delete_form) }}
+        <input type="submit" value="Delete">
+    {{ form_end(delete_form) }}
+    #}
+
+
+

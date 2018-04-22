@@ -31,6 +31,16 @@ if(document.getElementById("suppression") !== null)
     toasteur();
 }
 
+function toastmodification() {
+    M.toast({html: 'Modification effectuée'});
+}
+if(document.getElementById("modification") !== null)
+{
+    toastmodification();
+}
+
+
+
 /*(function($) {
     window.materializeForm.initDate = function() {
         $('input.date').datepicker({

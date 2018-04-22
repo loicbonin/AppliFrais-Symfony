@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-class UserType extends AbstractType
+class UserAdminType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -35,6 +35,15 @@ class UserType extends AbstractType
             //->add('fuel')
             //->add('fiscalPower')
             //->add('hiringDate')
+            ->add('roles', ChoiceType::class, array(
+                'choices'   => array(
+                    'Administrateur'   => 'ROLE_ADMIN',
+                    'Comptable'      => 'ROLE_COMPTABLE',
+                    'Visiteur'      => 'ROLE_VISITEUR',
+                ),
+                'multiple'  => true,
+                'expanded' => false,
+            ))
         ;
     }
     
@@ -55,13 +64,4 @@ class UserType extends AbstractType
     {
         return 'userbundle_user';
     }
-
-
-
-    public function getName()
-    {
-        return 'user_user_profile';
-    }
-
-
 }

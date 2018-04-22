@@ -1,6 +1,15 @@
 {% extends 'base.html.twig' %}
 
+
 {% block body %}
+
+    {% if app.session.flashBag.get('noticecomptable') is defined %}
+        {% for flash_message in app.session.flashBag.get('noticecomptable') %}
+
+            <div id="modification"></div>
+
+        {% endfor %}
+    {% endif %}
 
 <div style="margin: 25px;">
     <i class="material-icons left">add</i> Validation de Frais

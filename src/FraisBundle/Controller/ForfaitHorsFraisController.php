@@ -132,8 +132,17 @@ class ForfaitHorsFraisController extends Controller
             $forfaitHorsFrais->setPieceJointe($actualFile);
 
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash(
+                'noticecomptable',
+                'Modification effectuée'
+            );
             if($forfaitHorsFrais->getEtat()->getWording() == 'invalidée'){
-                $forfaitHorsFrais->setWording("REFUSÉ: ".$forfaitHorsFrais->getWording());
+                $refus = ("REFUSÉ: ".$forfaitHorsFrais->getWording());
+                if(strlen($refus) > 254 )
+                {
+                    $refus = mb_strimwidth($refus, 0, 254);
+                }
+                $forfaitHorsFrais->setWording($refus);
             }
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('forfaithorsfrais_edit_comptable', array('id' => $forfaitHorsFrais->getId()));

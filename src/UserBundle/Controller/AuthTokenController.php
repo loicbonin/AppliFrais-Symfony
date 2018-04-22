@@ -79,7 +79,7 @@ class AuthTokenController extends Controller
 
         return $view;
 
-        //return $authToken->getId();
+        return $authToken->getId();
     }
 
     private function invalidCredentials()

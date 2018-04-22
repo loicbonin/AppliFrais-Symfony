@@ -2,7 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: "@FrontBundle/Resources/config/services.yml" }
     - { resource: "@UserBundle/Resources/config/services.yml" }
     - { resource: "@FraisBundle/Resources/config/services.yml" }
 
@@ -97,6 +96,9 @@ fos_user:
     from_email:
         address: "%mailer_user%"
         sender_name: "%mailer_user%"
+    profile:
+        form:
+            type: UserBundle\Form\UserType
 
 
 fos_rest:

@@ -6,10 +6,6 @@ user:
     resource: "@UserBundle/Resources/config/routing.yml"
     prefix:   /utilisateur
 
-front:
-    resource: "@FrontBundle/Resources/config/routing.yml"
-    prefix: /
-
 
 # login:
     # path: /login
@@ -22,6 +18,7 @@ front:
 #logout:
 #    path: /logout
 
+#ROUTE FOS USER BUNDLE
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

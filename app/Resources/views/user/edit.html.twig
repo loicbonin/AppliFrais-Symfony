@@ -18,7 +18,7 @@
                 {% endif %}
             </ul>
         </div>
-    </nav
+    </nav>
     </div>
 {% endblock %}
 
@@ -41,6 +41,14 @@
                     {{ form_row(edit_form.lastName, {'attr': {'class': 'validate',}}) }}
                 </div>
                 <div class="col m6 s12">
+                    {{ form_row(edit_form.email, {'attr': {'class': 'validate',}}) }}
+                </div>
+
+                {#<div class="col m6 s12">
+                    {{ form_row(edit_form.password, {'attr': {'class': 'validate',}}) }}
+                </div>#}
+
+                <div class="col m6 s12">
                     {{ form_row(edit_form.job, {'attr': {'class': 'validate',}}) }}
                 </div>
                 <div class="col m6 s12">
@@ -57,9 +65,11 @@
                     {{ form_widget(edit_form.hiringDate, {'attr': {'class': 'validate datepicker',}}) }}
                 </div>
                 {% if is_granted("ROLE_ADMIN") %}
-                <div class="col m6 s12">
-                    {{ form_row(edit_form.roles, {'attr': {'class': 'dropdown-content select-dropdown multiple-select-dropdown',}}) }}
-                </div>
+                    {% if edit_form.roles is defined %}
+                        <div class="col m6 s12">
+                            {{ form_row(edit_form.roles, {'attr': {'class': 'dropdown-content select-dropdown multiple-select-dropdown',}}) }}
+                        </div>
+                    {% endif %}
                 {% endif %}
             </div>
             <div style="margin-top: 20px;">
@@ -74,7 +84,7 @@
         </div>
     {% elseif is_granted("ROLE_COMPTABLE") %}
         <div style="margin: 30px 0px;">
-            <a class="btn blue darken-4" href="{{ path('index_admin') }}">Retour à la liste des utilisateurs</a>
+            <a class="btn blue darken-4" href="{{ path('index_super_admin') }}">Retour à la liste des utilisateurs</a>
         </div>
     {% else %}
         <div style="margin: 30px 0px;">

@@ -13,3 +13,8 @@ services:
         arguments:  ['@router', '@security.authorization_checker']
         tags:
             - { name: 'monolog.logger', channel: 'security' }
+
+    user.form.profile:
+        class: UserBundle\Form\UserType
+        tags:
+            - { name: form.type, alias: user_user_profile }
