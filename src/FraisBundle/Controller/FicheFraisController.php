@@ -320,7 +320,7 @@ class FicheFraisController extends Controller
             'defaultfooterline' => 0,
             'showStats' => true,
         ]);
-        $html =  $this->render('fichefrais/pdf.html.twig', array(
+        $html =  $this->renderView('fichefrais/pdf.html.twig', array(
             'ficheFrais' => $ficheFrais,
         ));
         $mpdf->shrink_tables_to_fit = 1;
