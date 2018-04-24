@@ -35,10 +35,14 @@
                         {% set totalHorsFrai = 0 %}
                         {% set totalFicheFrai = 0 %}
                         {% for Frai in onefichefrais.frais %}
-                            {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                            {% if Frai.etat.wording != "invalidée" %}
+                                {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                            {% endif %}
                         {% endfor %}
                         {% for HorsFrai in onefichefrais.horsFrais %}
-                            {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                            {% if HorsFrai.etat.wording != "invalidée" %}
+                                {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                            {% endif %}
                         {% endfor %}
                         {% set totalFicheFrai = totalHorsFrai + totalFrai %}
                         {{ totalFicheFrai }}€
@@ -92,10 +96,11 @@
                                 {% endif %}
                             </td>
                             {# {% if "now"|date("d") < 11 %} #}
+                            {% if HorsFrai.etat.wording != "invalidée" and HorsFrai.etat.wording != "validée" %}
                                 <td>
                                     <a href="{{ path('forfaithorsfrais_edit', { 'id': HorsFrai.id }) }}">Modifier</a>
                                 </td>
-                            {# {% endif %} #}
+                            {% endif %}
 
                         </tr>
                     {% endfor %}
@@ -123,10 +128,11 @@
                                 Pas de pièce jointe
                             </td>
                             {# {% if "now"|date("d") < 11 %} #}
+                            {% if Frai.etat.wording != "invalidée"  and Frai.etat.wording != "validée" %}
                                 <td>
                                     <a href="{{ path('forfaitfrais_edit', { 'id': Frai.id }) }}">Modifier</a>
                                 </td>
-                            {# {% endif %}  #}
+                            {% endif %}
                          </tr>
                      {% endfor %}
                      </tbody>
@@ -163,10 +169,14 @@
                             {% set totalHorsFrai = 0 %}
                             {% set totalFicheFrai = 0 %}
                             {% for Frai in ficheFrai.frais %}
-                                {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                                {% if Frai.etat.wording != "invalidée" %}
+                                    {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                                {% endif %}
                             {% endfor %}
                             {% for HorsFrai in ficheFrai.horsFrais %}
-                                {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                                {% if HorsFrai.etat.wording != "invalidée" %}
+                                    {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                                {% endif %}
                             {% endfor %}
                             {% set totalFicheFrai = totalHorsFrai + totalFrai %}
                             {{ totalFicheFrai }}€

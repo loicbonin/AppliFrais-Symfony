@@ -29,10 +29,14 @@
                                     {% set totalHorsFrai = 0 %}
                                     {% set totalFicheFrai = 0 %}
                                     {% for Frai in ficheFrai.frais %}
-                                        {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                                        {% if Frai.etat.wording != "invalidée" %}
+                                            {% set totalFrai = (Frai.quantity * Frai.forfait.unitPrice) + totalFrai %}
+                                        {% endif %}
                                     {% endfor %}
                                     {% for HorsFrai in ficheFrai.horsFrais %}
-                                        {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                                        {% if HorsFrai.etat.wording != "invalidée" %}
+                                            {% set totalHorsFrai = HorsFrai.price + totalHorsFrai %}
+                                        {% endif %}
                                     {% endfor %}
                                     {% set totalFicheFrai = totalHorsFrai + totalFrai %}
                                     {{ totalFicheFrai }}€
@@ -45,10 +49,10 @@
                                     {% if v == ficheFrai.id %}
                                         {% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
                                             <p>La fiche est déjà remboursé.</p>
-                                        {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
-                                            <p>La fiche est en cours de payement.</p>
+                                        {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de paiement"%}
+                                            <p>La fiche est en cours de paiement.</p>
                                         {%  else %}
-                                            <p>Tout les frais sont validés ! Voulez vous mettre en payement ?</p> <a href="{{ path('mise_en_payement', {'id': visiteur.id, 'fiche':ficheFrai.id}) }}">Mettre en payement</a>
+                                            <p>Tout les frais sont validés ! Voulez vous mettre en paiement ?</p> <a href="{{ path('mise_en_payement', {'id': visiteur.id, 'fiche':ficheFrai.id}) }}">Mettre en paiement</a>
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
@@ -91,10 +95,10 @@
                                             </td>
                                             <td>{% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
                                                     <i class="material-icons left">not_interested</i>
-                                                {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de payement"%}
+                                                {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de paiement"%}
                                                     <i class="material-icons left">not_interested</i>
                                                 {% else %}
-                                                <a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id}) }}">Validation</a>
+                                                <a href="{{ path('forfaithorsfrais_edit_comptable', {'id': HorsFrai.id, 'idVisiteur': visiteur.id}) }}">Validation</a>
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -123,7 +127,15 @@
                                                     Pas encore traité
                                                 {% endif %}
                                             </td>
-                                            <td><a href="{{ path('forfaitfrais_edit_comptable', {'id': Frai.id}) }}">Validation</a></td>
+                                            <td>
+                                                {% if  ficheFrai.payement is not null and ficheFrai.payement == "Remboursé"%}
+                                                    <i class="material-icons left">not_interested</i>
+                                                {% elseif  ficheFrai.payement is not null and ficheFrai.payement == "En cours de paiement"%}
+                                                    <i class="material-icons left">not_interested</i>
+                                                {% else %}
+                                                    <a href="{{ path('forfaitfrais_edit_comptable', {'id': Frai.id, 'idVisiteur': visiteur.id}) }}">Validation</a>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 {% endif %}

@@ -43,7 +43,7 @@
     {{ form_end(form) }}
 </div>
     <div style="margin: 30px 0px;">
-        <a class="waves-effect waves-light btn blue darken-4" href="{{ path('index_admin') }}">Retour à l'accueil</a>
+        <a class="waves-effect waves-light btn blue darken-4" href="{{ path('fiche_par_user', { 'id': app.request.get('idVisiteur') }) }}">Retour aux fiches</a>
     </div>
 
 {% endblock %}
