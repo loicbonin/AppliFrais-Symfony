@@ -68,7 +68,7 @@ class AuthTokenController extends Controller
         $formatted = [
             'AUTH_STATUS' => 'True',
             'id' => $user->getId(),
-            'token' => $authToken->getValue(),
+            'token' => $authToken->getId(),
             'identity' => $user->getFirstName()." ".$user->getLastName(),
 
 
@@ -79,7 +79,7 @@ class AuthTokenController extends Controller
 
         return $view;
 
-        return $authToken->getId();
+        //return $authToken->getId();
     }
 
     private function invalidCredentials()

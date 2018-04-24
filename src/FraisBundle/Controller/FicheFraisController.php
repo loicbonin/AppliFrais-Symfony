@@ -139,7 +139,7 @@ class FicheFraisController extends Controller
             $NbFrais = $fiche->getNbFrais();
             if($NbFraisValide == $NbFrais){
                $listSuivieValide[] = $fiche->getId();
-               if($fiche->getPayement() != "Remboursé" or $fiche->getPayement() != "En cours de payement" ) {
+               if($fiche->getPayement() != "Remboursé" or $fiche->getPayement() != "En cours de paiement" ) {
                    $fiche->setDerniereEdition(new \DateTime());
                    $em->persist($fiche);
                    $em->flush();
@@ -333,31 +333,108 @@ class FicheFraisController extends Controller
     /**
      * @param Request $request
      * @Rest\View()
-     * @Rest\Get("/json/fichefrais/{id}")
+     * @Rest\Get("/json/fichefrais")
      */
     public function getFicheFraisAction(Request $request)
     {
-        $ficheFrais = $this->get('doctrine.orm.entity_manager')
+        $ficheFraisId = $_GET['idFiche'];
+
+        /*$ficheFrais = $this->get('doctrine.orm.entity_manager')
             ->getRepository('FraisBundle:FicheFrais')
-            ->find($request->get('id'));
-        /* @var $ficheFrais FicheFrais */
+            ->find($request->get('id'));*/
 
-        if (empty($ficheFrais)) {
-            return new JsonResponse(['message' => 'fiche frais non trouvé'], Response::HTTP_NOT_FOUND);
+
+
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $_GET['id'];
+        $tokenValue = $_GET['token'];
+
+        $user = $em->getRepository('UserBundle:User')->find($userId);
+        $token = $em->getRepository('UserBundle:AuthToken')->find($tokenValue);
+
+        $date = $token->getCreatedAt();
+        $dateNow = date("Y-m-d H:i:s");
+        $datetime1 = strtotime($date->format('Y-m-d H:i:s'));
+        $datetime2 = strtotime($dateNow);
+
+        $secs = $datetime2 - $datetime1;// == <seconds between the two times>
+        $mins = $secs / 60;
+        $formatted = [];
+
+        if($mins > 15){
+
+            $formatted[] = [
+                'AUTH_STATUS' => "False",
+            ];
+            return new JsonResponse($formatted);
         }
+        else {
+            $ficheFrais = $this->get('doctrine.orm.entity_manager')
+                ->getRepository('FraisBundle:FicheFrais')
+                ->find($ficheFraisId);
 
-        //return $ficheFrais;
-        $formatted = [
-            'id' => $ficheFrais->getId(),
-            'title' => $ficheFrais->getTitle(),
-            'monthYear' => $ficheFrais->getMonthyear(),
-            'comment' => $ficheFrais->getComment(),
-            'forfaitfrais' => $ficheFrais->getFrais(),
-            'forfaithorsfrais' => $ficheFrais->getHorsFrais(),
-            //'address' => $ficheFrais->getAddress(),
-        ];
+            if (empty($ficheFrais)) {
+                return new JsonResponse(['message' => 'fiche frais non trouvé'], Response::HTTP_NOT_FOUND);
+            }
 
-        return new JsonResponse($formatted);
+            $statusTemp = $ficheFrais->getEtat();
+            if( $statusTemp == Null){
+                $statusARenvoyer = 1;
+            }
+            elseif ($ficheFrais->getPayement() == "En cours de paiement"){
+                $statusARenvoyer = 2;
+            }
+            elseif ($ficheFrais->getPayement() == "Remboursé"){
+                $statusARenvoyer = 3;
+            }
+            else{
+                $statusARenvoyer = 1;
+            }
+
+            $tabforfaitfrais = [];
+
+            $forfaitfrais = $ficheFrais->getFrais();
+
+            $forfaithorsfrais = $ficheFrais->getHorsFrais();
+
+            foreach( $forfaitfrais as $forfait ){
+                $tabforfaitfrais[] = [
+                    'id' => $forfait->getId(),
+                    'type' => 'Forfait',
+                    'dateforfait' => $forfait->getDateDuFrais(),
+                    'intitulé' => $forfait->getForfait()->getWording(),
+                    'price' => ($forfait->getForfait()->getUnitPrice()*$forfait->getQuantity()),
+                    'comment' => $forfait->getComment(),
+                    'etat' => $forfait->getEtat()->getWording(),
+                ];
+            }
+
+            foreach( $forfaithorsfrais as $forfait ){
+                $tabforfaitfrais[] = [
+                    'id' => $forfait->getId(),
+                    'type' => 'Hors Forfait',
+                    'dateforfait' => $forfait->getDateDuFrais(),
+                    'intitulé' => $forfait->getWording(),
+                    'price' => $forfait->getPrice(),
+                    'comment' => $forfait->getComment(),
+                    'etat' => $forfait->getEtat()->getWording(),
+                ];
+            }
+            //return $ficheFrais;
+            $formatted = [
+                'AUTH_STATUS' => "True",
+                'fiche' => [
+                    'id' => $ficheFrais->getId(),
+                    'status' => $statusARenvoyer,
+                    //'title' => $ficheFrais->getTitle(),
+                    'monthYear' => $ficheFrais->getMonthyear(),
+                    'lignes' => $tabforfaitfrais,
+                ]
+            ];
+
+            return new JsonResponse($formatted);
+        }
     }
 
     /**
@@ -371,9 +448,11 @@ class FicheFraisController extends Controller
 
         $userId = $_GET['id'];
         $tokenValue = $_GET['token'];
+        $tokenId = $_GET['token'];
 
         $user = $em->getRepository('UserBundle:User')->find($userId);
-        $token = $em->getRepository('UserBundle:AuthToken')->findOneByValue($tokenValue);
+        //$token = $em->getRepository('UserBundle:AuthToken')->findOneByValue($tokenValue);
+        $token = $em->getRepository('UserBundle:AuthToken')->find($tokenId);
 
         $date = $token->getCreatedAt();
         $dateNow = date("Y-m-d H:i:s");
@@ -390,38 +469,60 @@ class FicheFraisController extends Controller
             ];
             return new JsonResponse($formatted);
         }
+        else{
+            $fiches = $this->get('doctrine.orm.entity_manager')->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
+            /* @var $fiches FicheFrais[] */
 
-        $fiches = $this->get('doctrine.orm.entity_manager')->getRepository('FraisBundle:FicheFrais')->getFraisByDate($user);
-        /* @var $fiches FicheFrais[] */
-        $prixDesHorsForfait = 0;
-        $prixDesFrais = 0;
 
-        $formatted = [];
-        foreach ($fiches as $fiche) {
-            $fraisHorsForfait = $fiche->getFrais();
-            $fraisForfait = $fiche->getHorsFrais();
+            $formatted = [];
+            foreach ($fiches as $fiche) {
+                $prixDesHorsForfait = 0;
+                $prixDesFrais = 0;
 
-            foreach ($fraisHorsForfait as $fhf){
-                $prixfhf = $fhf->getPrice();
-                $prixDesHorsForfait = $prixDesHorsForfait + $prixfhf;
+                $fraisHorsForfait = $fiche->getHorsFrais();
+                $fraisForfait = $fiche->getFrais();
+                if($fraisHorsForfait != null && !empty($fraisHorsForfait) ) {
+                    foreach ($fraisHorsForfait as $fhf) {
+                        $prixfhf = $fhf->getPrice();
+                        $prixDesHorsForfait = $prixDesHorsForfait + $prixfhf;
+                    }
+                }
+                if ( $fraisForfait != null && !empty($fraisForfait)){
+                    foreach ($fraisForfait as $ff){
+                        $quantite = $ff->getQuantity();
+                        $prixfraisforfait = $ff->getForfait()->getUnitPrice();
+                        $prixFinal = $quantite*$prixfraisforfait;
+                        $prixDesFrais = $prixDesFrais + $prixFinal;
+                    }
+                }
+
+                $prixDeLaFiche = $prixDesFrais + $prixDesHorsForfait;
+
+                $statusTemp = $fiche->getEtat();
+                if( $statusTemp == Null){
+                    $statusARenvoyer = 1;
+                }
+                elseif ($fiche->getPayement() == "En cours de paiement"){
+                    $statusARenvoyer = 2;
+                }
+                elseif ($fiche->getPayement() == "Remboursé"){
+                    $statusARenvoyer = 3;
+                }
+                else{
+                    $statusARenvoyer = 1;
+                }
+
+                $formatted[] = [
+
+                    'id' => $fiche->getId(),
+                    'status' => $statusARenvoyer,
+                    'monthYear' => $fiche->getMonthyear(),
+                    'value' => $prixDeLaFiche,
+                ];
             }
-            foreach ($fraisForfait as $ff){
-                $quantite = $ff->getQuantity();
-                $prixfraisforfait = $ff->getForfait()->getUnitPrice();
-                $prixFinal = $quantite*$prixfraisforfait;
-                $prixDesFrais = $prixDesFrais + $prixFinal;
-            }
-            $prixDeLaFiche = $prixDesFrais + $prixDesHorsForfait;
-
-            $formatted[] = [
-                'AUTH_STATUS' => "True",
-                'id' => $fiche->getId(),
-                'etat' => $fiche->getEtat(),
-                'monthYear' => $fiche->getMonthyear(),
-                'price' => $prixDeLaFiche,
-            ];
+            return new JsonResponse(['AUTH_STATUS' => "True", 'fiches' => $formatted]);
         }
-        return new JsonResponse($formatted);
+
 
         // Récupération du view handler
         /*$viewHandler = $this->get('fos_rest.view_handler');
