@@ -389,14 +389,14 @@ class FicheFrais
 
         $listFraisHorsForfait = $this->getHorsFrais();
         foreach ( $listFraisHorsForfait as $hf){
-            if($hf->getEtat()->getWording() == "validée"){
+            if($hf->getEtat()->getWording() == "validée" or $hf->getEtat()->getWording() == "invalidée"){
                 $nbFraisHorsForfaitValide = $nbFraisHorsForfaitValide +1;
             }
 
         }
         $listFraisForfait = $this->getFrais();
         foreach ($listFraisForfait as $ff){
-            if($ff->getEtat()->getWording() == "validée") {
+            if($ff->getEtat()->getWording() == "validée" or $ff->getEtat()->getWording() == "invalidée") {
                 $nbFraisForfaitValide = $nbFraisForfaitValide + 1;
             }
         }
